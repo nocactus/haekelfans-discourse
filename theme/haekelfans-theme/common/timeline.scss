@@ -1,0 +1,79 @@
+.hf-timeline {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 250px;
+  gap: 16px;
+  align-items: start;
+
+  &__main {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    min-width: 0;
+  }
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  &__aside {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    position: sticky;
+    top: calc(var(--header-offset, 60px) + 12px);
+  }
+
+  &__sentinel {
+    height: 1px;
+  }
+}
+
+.hf-post-card {
+  // goedkope virtualisatie voor lange sessies (spec §11)
+  content-visibility: auto;
+  contain-intrinsic-size: auto 480px;
+
+  &__title {
+    color: var(--hf-accent);
+    font-size: 1.25em;
+    font-weight: 700;
+    margin: 0.35em 0 0.2em;
+    line-height: 1.25;
+  }
+}
+
+.hf-filterbar {
+  padding: 0.65em 1em;
+
+  &__tabs {
+    display: flex;
+    gap: 1.2em;
+    font-weight: 600;
+  }
+
+  &__tab {
+    color: var(--hf-ink);
+    padding-bottom: 4px;
+
+    &.is-active {
+      color: var(--hf-accent);
+      border-bottom: 2.5px solid var(--hf-accent);
+    }
+
+    &:hover {
+      color: var(--hf-accent);
+    }
+  }
+}
+
+@media (max-width: 1000px) {
+  .hf-timeline {
+    grid-template-columns: minmax(0, 1fr);
+
+    &__aside {
+      display: none;
+    }
+  }
+}
