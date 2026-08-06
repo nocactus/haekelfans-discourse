@@ -1,9 +1,11 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
 import { i18n } from "discourse-i18n";
+import HfComposer from "./composer";
 import HfPostCard from "./post-card";
 import HfPostModal from "./post-modal";
 
@@ -11,6 +13,20 @@ export default class HfTimeline extends Component {
   @service router;
 
   @tracked openTopic = null;
+
+  composerApi = null;
+
+  registerComposer = (api) => {
+    this.composerApi = api;
+  };
+
+  @action
+  newTopic() {
+    this.composerApi?.expand();
+    document
+      .querySelector(".hf-composer")
+      ?.scrollIntoView({ block: "center", behavior: "smooth" });
+  }
 
   @action
   openModal(topic) {
@@ -45,6 +61,10 @@ export default class HfTimeline extends Component {
 
   get currentPath() {
     return this.router.currentURL?.split("#")[0] ?? "";
+  }
+
+  get newTopicLabel() {
+    return i18n(themePrefix("hf.new_topic"));
   }
 
   get tabs() {
@@ -98,7 +118,14 @@ export default class HfTimeline extends Component {
               >{{tab.label}}</a>
             {{/each}}
           </div>
+          <button
+            type="button"
+            class="hf-filterbar__new"
+            {{on "click" this.newTopic}}
+          >✎ {{this.newTopicLabel}}</button>
         </nav>
+
+        <HfComposer @onRegister={{this.registerComposer}} />
 
         <div class="hf-timeline__list">
           {{#each this.topics as |topic|}}

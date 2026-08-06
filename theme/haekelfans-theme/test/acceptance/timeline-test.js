@@ -1,4 +1,4 @@
-import { click, triggerKeyEvent, visit } from "@ember/test-helpers";
+import { click, fillIn, triggerKeyEvent, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import topicFixtures from "discourse/tests/fixtures/discovery-fixtures";
@@ -71,9 +71,14 @@ export function hfTreeResponse(topicId) {
   };
 }
 
+let pretenderServer;
+let pretenderHelper;
+
 acceptance("Häkelfans | timeline", function (needs) {
   needs.user();
   needs.pretender((server, helper) => {
+    pretenderServer = server;
+    pretenderHelper = helper;
     server.get("/latest.json", () => helper.response(hfTopicListResponse()));
     server.get("/haekelfans/topic/:id/tree.json", (request) =>
       helper.response(hfTreeResponse(parseInt(request.params.id, 10)))
@@ -135,6 +140,44 @@ acceptance("Häkelfans | timeline", function (needs) {
     assert
       .dom(".hf-topic-view__back")
       .exists("terugknop naar de tijdlijn aanwezig");
+  });
+
+  test("inline composer plaatst met auto-titel en no-onebox vlag", async function (assert) {
+    let captured = null;
+    pretenderServer.post("/posts.json", (request) => {
+      captured = new URLSearchParams(request.requestBody);
+      return pretenderHelper.response({
+        id: 999,
+        post_number: 1,
+        topic_id: 4242,
+        cooked: "<p>ok</p>",
+      });
+    });
+    pretenderServer.get("/drafts/new_topic.json", () =>
+      pretenderHelper.response({ draft: null, draft_sequence: 0 })
+    );
+
+    await visit("/latest");
+    assert.dom(".hf-composer__collapsed").exists("rust-stand zichtbaar");
+    await click(".hf-composer__opener");
+    assert.dom(".hf-composer__form").exists("composer klapt open");
+    await fillIn(
+      ".hf-composer__raw",
+      "Schau mal dieses tolle Garn aus dem Urlaub mit"
+    );
+    await click(".hf-composer__toggle input");
+    await click(".hf-composer__publish");
+    assert.strictEqual(
+      captured?.get("title"),
+      "Schau mal dieses tolle Garn aus dem Urlaub",
+      "titel automatisch uit eerste 8 woorden"
+    );
+    assert.strictEqual(
+      captured?.get("hf_no_onebox"),
+      "true",
+      "no-onebox vlag meegestuurd bij uitgezette preview"
+    );
+    assert.dom(".hf-composer__collapsed").exists("composer klapt weer dicht");
   });
 
   test("berichtmodal toont volledige boom met uitklapbare niveaus", async function (assert) {
