@@ -31,4 +31,26 @@ RSpec.describe HaekelfansTimeline::TimelineController do
       expect(response.status).to eq(404)
     end
   end
+
+  describe "#online" do
+    fab!(:online_user) { Fabricate(:user, last_seen_at: 2.minutes.ago) }
+    fab!(:offline_user) { Fabricate(:user, last_seen_at: 2.hours.ago) }
+
+    before { Discourse.cache.delete("haekelfans_online") }
+
+    it "telt alleen recent geziene leden" do
+      sign_in(user)
+      get "/haekelfans/online.json"
+      expect(response.status).to eq(200)
+      usernames = response.parsed_body["users"].map { |u| u["username"] }
+      expect(usernames).to include(online_user.username)
+      expect(usernames).not_to include(offline_user.username)
+      expect(response.parsed_body["count"]).to be >= 1
+    end
+
+    it "weigert anoniem" do
+      get "/haekelfans/online.json"
+      expect(response.status).to eq(403)
+    end
+  end
 end
