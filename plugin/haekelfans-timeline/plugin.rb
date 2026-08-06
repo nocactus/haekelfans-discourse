@@ -56,6 +56,26 @@ after_initialize do
     include_condition: -> { SiteSetting.haekelfans_timeline_enabled },
   ) { HaekelfansTimeline::TimelineData.first_post_id_for(object) }
 
+  # Deeplinks: het theme rendert de topic-pagina in kaartweergave en
+  # heeft daarvoor dezelfde velden nodig als in de lijst.
+  add_to_serializer(
+    :topic_view,
+    :hf_images,
+    include_condition: -> { SiteSetting.haekelfans_timeline_enabled },
+  ) do
+    HaekelfansTimeline::TimelineData.preload([object.topic])
+    HaekelfansTimeline::TimelineData.images_for(object.topic)
+  end
+
+  add_to_serializer(
+    :topic_view,
+    :hf_first_post_id,
+    include_condition: -> { SiteSetting.haekelfans_timeline_enabled },
+  ) do
+    HaekelfansTimeline::TimelineData.preload([object.topic])
+    HaekelfansTimeline::TimelineData.first_post_id_for(object.topic)
+  end
+
   # Per-bericht "geen link-preview": composer stuurt hf_no_onebox mee;
   # bij het post-processen worden oneboxes vervangen door platte links.
   register_post_custom_field_type("hf_no_onebox", :boolean)
