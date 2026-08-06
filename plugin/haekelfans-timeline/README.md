@@ -42,7 +42,7 @@ Post-parameter:
 In `containers/app.yml` onder `hooks: after_code`:
 
 ```yaml
-- git clone https://github.com/gekophaken/haekelfans-timeline.git
+- git clone https://github.com/nocactus/haekelfans-timeline.git
 ```
 
 Daarna `./launcher rebuild app`.
