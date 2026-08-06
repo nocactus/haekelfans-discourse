@@ -14,5 +14,20 @@ end
 require_relative "lib/haekelfans_timeline/engine"
 
 after_initialize do
-  # Serializer-velden en event-hooks komen in latere taken.
+  require_relative "lib/haekelfans_timeline/timeline_data"
+
+  TopicList.on_preload do |topics, topic_list|
+    if SiteSetting.haekelfans_timeline_enabled
+      HaekelfansTimeline::TimelineData.preload(
+        topics,
+        current_user: topic_list.respond_to?(:current_user) ? topic_list.current_user : nil,
+      )
+    end
+  end
+
+  add_to_serializer(
+    :topic_list_item,
+    :hf_images,
+    include_condition: -> { SiteSetting.haekelfans_timeline_enabled },
+  ) { HaekelfansTimeline::TimelineData.images_for(object) }
 end
