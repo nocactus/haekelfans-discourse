@@ -1,0 +1,207 @@
+.hf-profile-card {
+  &__head {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 0.8em;
+
+    img {
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+    }
+
+    div {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+
+    b {
+      font-size: 0.95em;
+    }
+  }
+
+  &__username {
+    color: var(--hf-muted);
+    font-size: 0.8em;
+  }
+
+  &__stats {
+    display: flex;
+    gap: 1.2em;
+    font-size: 0.85em;
+    margin-bottom: 0.4em;
+
+    b {
+      color: var(--hf-accent);
+    }
+  }
+
+  &__links {
+    display: flex;
+    gap: 8px;
+    margin-top: 0.8em;
+
+    a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 34px;
+      border-radius: 9px;
+      background: var(--hf-bubble);
+      text-decoration: none;
+      font-size: 0.95em;
+
+      &:hover {
+        background: var(--hf-accent-soft);
+      }
+    }
+  }
+}
+
+.hf-online-widget {
+  h4 {
+    margin: 0 0 0.8em;
+    font-size: 0.75em;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--hf-muted);
+  }
+
+  &__row {
+    display: flex;
+    align-items: center;
+
+    img {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 2px solid var(--hf-card);
+      margin-right: -8px;
+    }
+  }
+
+  &__moreCount {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--hf-bubble);
+    color: var(--hf-muted);
+    font-size: 0.7em;
+    font-weight: 700;
+    border: 2px solid var(--hf-card);
+  }
+
+  &__note {
+    font-size: 0.85em;
+    color: var(--hf-muted);
+    margin: 0.7em 0 0;
+  }
+
+  &__dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #4caf7d;
+    margin-right: 6px;
+  }
+}
+
+.hf-footer {
+  background: var(--hf-footer);
+  color: #cfd8d7;
+  margin-top: 48px;
+
+  &__inner {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 36px 24px;
+    display: flex;
+    gap: 60px;
+    flex-wrap: wrap;
+  }
+
+  &__col {
+    h5 {
+      color: #fff;
+      font-size: 0.9em;
+      margin: 0 0 0.7em;
+    }
+
+    ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.45em;
+    }
+
+    a {
+      color: #cfd8d7;
+      font-size: 0.9em;
+
+      &:hover {
+        color: #fff;
+      }
+    }
+  }
+
+  &__socials {
+    margin-left: auto;
+    display: flex;
+    gap: 12px;
+    align-items: flex-end;
+
+    a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+
+      svg {
+        width: 17px;
+        height: 17px;
+      }
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.22);
+      }
+    }
+  }
+}
+
+// Core-sidebar in Häkelfans-stijl
+.sidebar-wrapper {
+  background: transparent;
+
+  .sidebar-container {
+    background: var(--hf-card);
+    border-radius: var(--hf-radius);
+    box-shadow: var(--hf-shadow);
+    border: none;
+  }
+
+  .sidebar-section-link:hover {
+    background: var(--hf-accent-soft);
+  }
+
+  .sidebar-section-link.active {
+    background: var(--hf-accent-soft);
+    font-weight: 700;
+  }
+
+  .sidebar-footer-wrapper {
+    display: none;
+  }
+}

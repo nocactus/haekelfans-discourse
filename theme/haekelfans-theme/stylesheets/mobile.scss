@@ -1,0 +1,63 @@
+// Mobiel: één kolom, app-gevoel (spec §7.3)
+@media (max-width: 1000px) {
+  .hf-filterbar {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+
+    &__tabs {
+      flex-wrap: nowrap;
+      white-space: nowrap;
+    }
+
+    &__new {
+      display: none; // vervangen door de FAB
+    }
+  }
+
+
+  .hf-post-card {
+    padding: 1em 0.9em 0.75em;
+  }
+
+  .hf-post-modal {
+    padding: 0;
+
+    &__dialog {
+      max-width: none;
+      max-height: none;
+      min-height: 100vh;
+      border-radius: 0;
+    }
+  }
+}
+
+.hf-fab {
+  display: flex;
+  position: fixed;
+  right: 18px;
+  bottom: 20px;
+  z-index: 800;
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  border: none;
+  background: var(--hf-accent);
+  color: #fff;
+  font-size: 1.5em;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 20px rgba(234, 79, 134, 0.45);
+  cursor: pointer;
+}
+
+@media (min-width: 1001px) {
+  .hf-fab {
+    display: none; // op desktop zit "Neues Thema" in de filterbalk
+  }
+}

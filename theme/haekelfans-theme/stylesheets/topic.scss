@@ -1,0 +1,41 @@
+// Topic-pagina's (deeplinks) renderen in kaartweergave via de
+// hf-topic-view connector; de standaard weergave gaat uit.
+// Alleen voor gewone topics — privéberichten behouden de core-weergave.
+body.archetype-regular {
+  .post-stream,
+  .topic-map,
+  #topic-title,
+  .topic-navigation,
+  .topic-timeline,
+  #topic-footer-buttons,
+  #topic-footer-main-buttons,
+  .suggested-topics,
+  .more-topics__container,
+  .topic-footer-main-buttons,
+  #topic-progress-wrapper {
+    display: none !important;
+  }
+}
+
+.hf-topic-view {
+  max-width: 620px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  &__back {
+    color: var(--hf-muted);
+    font-size: 0.85em;
+    font-weight: 600;
+
+    &:hover {
+      color: var(--hf-accent);
+    }
+  }
+}
+
+.hf-comment.is-highlighted .hf-comment__bubble {
+  outline: 2px solid var(--hf-accent);
+  outline-offset: 2px;
+}
