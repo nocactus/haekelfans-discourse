@@ -9,6 +9,7 @@ import { hfAvatarUrl, hfTimeAgo } from "../../lib/hf-format";
 import { toggleLike } from "../../lib/hf-like";
 import HfComment from "./comment";
 import HfCommentBox from "./comment-box";
+import HfGallery from "./gallery";
 
 export default class HfPostCard extends Component {
   @tracked expanded = false;
@@ -184,15 +185,7 @@ export default class HfPostCard extends Component {
 
       {{#if this.images.length}}
         <div class="hf-post-card__gallery">
-          {{#each this.images as |image|}}
-            <img
-              src={{image.thumb_url}}
-              width={{image.width}}
-              height={{image.height}}
-              loading="lazy"
-              alt=""
-            />
-          {{/each}}
+          <HfGallery @images={{this.images}} @title={{@topic.title}} />
         </div>
       {{/if}}
 
