@@ -128,6 +128,15 @@ acceptance("Häkelfans | timeline", function (needs) {
     assert.dom(".hf-lightbox").doesNotExist("Esc sluit");
   });
 
+  test("topic-deeplink rendert kaartweergave", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+    assert.dom(".hf-topic-view").exists("kaartweergave op topic-route");
+    assert.dom(".hf-topic-view .hf-post-view").exists("post-view geladen");
+    assert
+      .dom(".hf-topic-view__back")
+      .exists("terugknop naar de tijdlijn aanwezig");
+  });
+
   test("berichtmodal toont volledige boom met uitklapbare niveaus", async function (assert) {
     await visit("/latest");
     await click(".hf-post-card:nth-of-type(1) .hf-view-all");

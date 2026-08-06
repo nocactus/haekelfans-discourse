@@ -50,6 +50,21 @@ export default class HfPostView extends Component {
     ]);
     this.tree = tree;
     this.cooked = topicJson?.post_stream?.posts?.[0]?.cooked ?? null;
+    this.highlight();
+  }
+
+  highlight() {
+    const number = this.args.highlightPostNumber;
+    if (!number) {
+      return;
+    }
+    requestAnimationFrame(() => {
+      const el = document.querySelector(`[data-hf-post-number="${number}"]`);
+      if (el) {
+        el.scrollIntoView({ block: "center" });
+        el.classList.add("is-highlighted");
+      }
+    });
   }
 
   loadMore = async () => {
