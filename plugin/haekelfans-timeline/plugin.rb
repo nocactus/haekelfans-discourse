@@ -15,6 +15,7 @@ require_relative "lib/haekelfans_timeline/engine"
 
 after_initialize do
   require_relative "lib/haekelfans_timeline/timeline_data"
+  require_relative "lib/haekelfans_timeline/reply_tree"
 
   TopicList.on_preload do |topics, topic_list|
     if SiteSetting.haekelfans_timeline_enabled
