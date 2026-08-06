@@ -56,4 +56,34 @@ RSpec.describe HaekelfansTimeline::TimelineData do
       expect(described_class.reply_total_for(topic)).to eq(0)
     end
   end
+
+  describe ".likers_for" do
+    it "vat likers van de first post samen" do
+      liker1 = Fabricate(:user, name: "Karin R")
+      liker2 = Fabricate(:user, name: "Brenda O")
+      liker3 = Fabricate(:user, name: "Marga B")
+      [liker1, liker2, liker3].each { |u| PostActionCreator.like(u, post1) }
+      described_class.preload([topic], current_user: liker1)
+      likers = described_class.likers_for(topic)
+      expect(likers[:count]).to eq(3)
+      expect(likers[:names].length).to eq(2)
+      expect(likers[:current_user_liked]).to eq(true)
+    end
+
+    it "geeft lege samenvatting zonder likes" do
+      described_class.preload([topic])
+      expect(described_class.likers_for(topic)).to eq(
+        names: [],
+        count: 0,
+        current_user_liked: false,
+      )
+    end
+  end
+
+  describe ".first_post_id_for" do
+    it "levert het id van post_number 1" do
+      described_class.preload([topic])
+      expect(described_class.first_post_id_for(topic)).to eq(post1.id)
+    end
+  end
 end

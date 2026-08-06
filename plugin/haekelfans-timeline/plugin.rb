@@ -42,4 +42,16 @@ after_initialize do
     :hf_reply_total,
     include_condition: -> { SiteSetting.haekelfans_timeline_enabled },
   ) { HaekelfansTimeline::TimelineData.reply_total_for(object) }
+
+  add_to_serializer(
+    :topic_list_item,
+    :hf_likers,
+    include_condition: -> { SiteSetting.haekelfans_timeline_enabled },
+  ) { HaekelfansTimeline::TimelineData.likers_for(object) }
+
+  add_to_serializer(
+    :topic_list_item,
+    :hf_first_post_id,
+    include_condition: -> { SiteSetting.haekelfans_timeline_enabled },
+  ) { HaekelfansTimeline::TimelineData.first_post_id_for(object) }
 end

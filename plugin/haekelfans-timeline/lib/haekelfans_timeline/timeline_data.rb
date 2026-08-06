@@ -10,8 +10,10 @@ module HaekelfansTimeline
       return if ids.empty?
 
       first_posts = Post.where(topic_id: ids, post_number: 1).pluck(:topic_id, :id).to_h
+      topics.each { |t| merge_hf_data(t, first_post_id: first_posts[t.id]) }
       preload_images(topics, first_posts)
       preload_replies(topics, ids)
+      preload_likers(topics, first_posts, current_user)
     end
 
     def self.images_for(topic)
@@ -24,6 +26,40 @@ module HaekelfansTimeline
 
     def self.reply_total_for(topic)
       hf_data(topic)[:reply_total] || 0
+    end
+
+    EMPTY_LIKERS = { names: [], count: 0, current_user_liked: false }.freeze
+
+    def self.likers_for(topic)
+      hf_data(topic)[:likers] || EMPTY_LIKERS
+    end
+
+    def self.first_post_id_for(topic)
+      hf_data(topic)[:first_post_id]
+    end
+
+    def self.preload_likers(topics, first_posts, current_user)
+      like_id = PostActionType.types[:like]
+      likes =
+        PostAction
+          .where(post_id: first_posts.values, post_action_type_id: like_id, deleted_at: nil)
+          .joins(:user)
+          .order(:post_id, :created_at)
+          .pluck(:post_id, :user_id, "users.name", "users.username")
+      by_post = likes.group_by(&:first)
+      topics.each do |t|
+        list = by_post[first_posts[t.id]] || []
+        next if list.empty?
+        merge_hf_data(
+          t,
+          likers: {
+            names: list.first(2).map { |(_p, _uid, name, username)| name.presence || username },
+            count: list.size,
+            current_user_liked:
+              current_user ? list.any? { |(_p, uid, _n, _u)| uid == current_user.id } : false,
+          },
+        )
+      end
     end
 
     def self.preload_replies(topics, ids)
