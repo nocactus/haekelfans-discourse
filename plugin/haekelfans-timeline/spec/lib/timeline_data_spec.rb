@@ -27,4 +27,33 @@ RSpec.describe HaekelfansTimeline::TimelineData do
       expect(described_class.images_for(topic).length).to eq(1)
     end
   end
+
+  describe ".replies_for" do
+    it "levert de laatste N replies, oudste eerst, met excerpt en teller" do
+      SiteSetting.haekelfans_timeline_reply_preview_count = 2
+      Fabricate(:post, topic: topic, post_number: 2, raw: "Erste Antwort hier")
+      Fabricate(:post, topic: topic, post_number: 3, raw: "Zweite Antwort hier")
+      Fabricate(
+        :post,
+        topic: topic,
+        post_number: 4,
+        raw: "Dritte Antwort hier",
+        reply_to_post_number: 2,
+      )
+      described_class.preload([topic])
+      replies = described_class.replies_for(topic)
+      expect(replies.map { |r| r[:post_number] }).to eq([3, 4])
+      expect(replies.last[:reply_to_post_number]).to eq(2)
+      expect(replies.last[:excerpt]).to include("Dritte")
+      expect(described_class.reply_total_for(topic)).to eq(3)
+    end
+
+    it "slaat verwijderde posts over" do
+      p2 = Fabricate(:post, topic: topic, post_number: 2)
+      p2.trash!
+      described_class.preload([topic])
+      expect(described_class.replies_for(topic)).to eq([])
+      expect(described_class.reply_total_for(topic)).to eq(0)
+    end
+  end
 end

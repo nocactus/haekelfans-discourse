@@ -30,4 +30,16 @@ after_initialize do
     :hf_images,
     include_condition: -> { SiteSetting.haekelfans_timeline_enabled },
   ) { HaekelfansTimeline::TimelineData.images_for(object) }
+
+  add_to_serializer(
+    :topic_list_item,
+    :hf_replies,
+    include_condition: -> { SiteSetting.haekelfans_timeline_enabled },
+  ) { HaekelfansTimeline::TimelineData.replies_for(object) }
+
+  add_to_serializer(
+    :topic_list_item,
+    :hf_reply_total,
+    include_condition: -> { SiteSetting.haekelfans_timeline_enabled },
+  ) { HaekelfansTimeline::TimelineData.reply_total_for(object) }
 end

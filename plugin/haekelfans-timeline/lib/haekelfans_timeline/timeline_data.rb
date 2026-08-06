@@ -11,10 +11,57 @@ module HaekelfansTimeline
 
       first_posts = Post.where(topic_id: ids, post_number: 1).pluck(:topic_id, :id).to_h
       preload_images(topics, first_posts)
+      preload_replies(topics, ids)
     end
 
     def self.images_for(topic)
       hf_data(topic)[:images] || []
+    end
+
+    def self.replies_for(topic)
+      hf_data(topic)[:replies] || []
+    end
+
+    def self.reply_total_for(topic)
+      hf_data(topic)[:reply_total] || 0
+    end
+
+    def self.preload_replies(topics, ids)
+      n = SiteSetting.haekelfans_timeline_reply_preview_count
+      rows = DB.query(<<~SQL, ids: ids, n: n)
+        SELECT * FROM (
+          SELECT p.id, p.topic_id, p.post_number, p.reply_to_post_number, p.user_id,
+                 p.cooked, p.created_at, p.like_count,
+                 ROW_NUMBER() OVER (PARTITION BY p.topic_id ORDER BY p.post_number DESC) AS rn,
+                 COUNT(*)    OVER (PARTITION BY p.topic_id) AS total
+          FROM posts p
+          WHERE p.topic_id IN (:ids) AND p.post_number > 1
+            AND p.deleted_at IS NULL AND p.post_type = 1 AND p.hidden = false
+        ) x WHERE rn <= :n
+      SQL
+      users = User.where(id: rows.map(&:user_id).uniq).index_by(&:id)
+      rows
+        .group_by(&:topic_id)
+        .each do |tid, list|
+          t = topics.find { |x| x.id == tid } or next
+          replies =
+            list.sort_by(&:post_number).map do |r|
+              u = users[r.user_id]
+              {
+                post_id: r.id,
+                post_number: r.post_number,
+                reply_to_post_number: r.reply_to_post_number,
+                username: u&.username,
+                name: u&.name,
+                avatar_template: u&.avatar_template,
+                excerpt: PrettyText.excerpt(r.cooked, 200, keep_emoji_images: true),
+                created_at: r.created_at,
+                like_count: r.like_count,
+                current_user_reacted: false,
+              }
+            end
+          merge_hf_data(t, replies: replies, reply_total: list.first.total)
+        end
     end
 
     def self.preload_images(topics, first_posts)
