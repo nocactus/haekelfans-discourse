@@ -1,0 +1,45 @@
+// Header: wit, rustig, sticky (core regelt sticky zelf).
+.d-header {
+  background: var(--hf-card);
+  box-shadow: 0 2px 10px rgba(22, 44, 45, 0.07);
+}
+
+.hf-nav-links {
+  display: flex;
+  gap: 1.4em;
+  align-items: center;
+  margin: 0 1em;
+
+  a {
+    color: var(--hf-ink);
+    font-size: 0.78em;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    white-space: nowrap;
+
+    &:hover {
+      color: var(--hf-accent);
+    }
+  }
+
+  @media (max-width: 1100px) {
+    display: none;
+  }
+}
+
+// Gereserveerde chat-plek: icoon blijft verborgen tot de instelling aan gaat.
+@if $chat_icon_enabled == "false" {
+  .chat-header-icon {
+    display: none !important;
+  }
+}
+
+// User-menu versimpeling (spec §8): alleen notificaties, berichten,
+// profiel en afmelden blijven over.
+.user-menu.revamped {
+  .top-tabs .btn:not(.user-notifications-tab):not(.user-pms-tab),
+  .bottom-tabs .user-drafts-tab {
+    display: none;
+  }
+}

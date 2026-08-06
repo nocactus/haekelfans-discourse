@@ -83,6 +83,25 @@ acceptance("Häkelfans | timeline", function (needs) {
     server.get("/haekelfans/topic/:id/tree.json", (request) =>
       helper.response(hfTreeResponse(parseInt(request.params.id, 10)))
     );
+    server.get("/haekelfans/online.json", () =>
+      helper.response({
+        count: 3,
+        users: [
+          { id: 1, username: "karin", name: "Karin", avatar_template: "/letter_avatar_proxy/v4/letter/k/aaaaaa/{size}.png" },
+          { id: 2, username: "brenda", name: "Brenda", avatar_template: "/letter_avatar_proxy/v4/letter/b/bbbbbb/{size}.png" },
+        ],
+      })
+    );
+    server.get("/u/:username/summary.json", () =>
+      helper.response({
+        user_summary: {
+          likes_given: 21,
+          likes_received: 5,
+          topic_count: 2,
+          post_count: 0,
+        },
+      })
+    );
     server.get("/t/:id.json", (request) =>
       helper.response({
         id: parseInt(request.params.id, 10),
@@ -140,6 +159,20 @@ acceptance("Häkelfans | timeline", function (needs) {
     assert
       .dom(".hf-topic-view__back")
       .exists("terugknop naar de tijdlijn aanwezig");
+  });
+
+  test("header toont instelbare nav-links", async function (assert) {
+    await visit("/latest");
+    assert.dom(".hf-nav-links a").exists({ count: 4 }, "vier links uit de setting");
+    assert.dom(".hf-nav-links a").hasText("Häkelanleitungen");
+    assert.dom(".hf-footer").exists("footer met instelbare kolommen");
+    assert.dom(".hf-footer__col a").exists("footer-links gerenderd");
+  });
+
+  test("rechterkolom toont profielkaart en online-widget", async function (assert) {
+    await visit("/latest");
+    assert.dom(".hf-timeline__aside .hf-profile-card").exists();
+    assert.dom(".hf-timeline__aside .hf-online-widget").includesText("3");
   });
 
   test("inline composer plaatst met auto-titel en no-onebox vlag", async function (assert) {
