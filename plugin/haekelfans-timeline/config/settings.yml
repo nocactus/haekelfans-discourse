@@ -1,0 +1,10 @@
+plugins:
+  haekelfans_timeline_enabled:
+    default: true
+    client: true
+  haekelfans_timeline_max_images:
+    default: 10
+    client: true
+  haekelfans_timeline_reply_preview_count:
+    default: 3
+    client: true

@@ -1,0 +1,5 @@
+de:
+  site_settings:
+    haekelfans_timeline_enabled: "Häkelfans-Timeline-Daten aktivieren"
+    haekelfans_timeline_max_images: "Maximale Anzahl Bilder pro Beitrag in der Timeline"
+    haekelfans_timeline_reply_preview_count: "Anzahl Antwort-Vorschauen pro Beitrag in der Listen-Payload"

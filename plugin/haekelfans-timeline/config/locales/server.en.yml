@@ -1,0 +1,5 @@
+en:
+  site_settings:
+    haekelfans_timeline_enabled: "Enable Häkelfans timeline data"
+    haekelfans_timeline_max_images: "Maximum number of images per post in the timeline"
+    haekelfans_timeline_reply_preview_count: "Number of reply previews per post in the list payload"
