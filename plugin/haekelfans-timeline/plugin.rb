@@ -55,4 +55,33 @@ after_initialize do
     :hf_first_post_id,
     include_condition: -> { SiteSetting.haekelfans_timeline_enabled },
   ) { HaekelfansTimeline::TimelineData.first_post_id_for(object) }
+
+  # Per-bericht "geen link-preview": composer stuurt hf_no_onebox mee;
+  # bij het post-processen worden oneboxes vervangen door platte links.
+  register_post_custom_field_type("hf_no_onebox", :boolean)
+  add_permitted_post_create_param(:hf_no_onebox)
+
+  on(:post_created) do |post, opts, _user|
+    if opts[:hf_no_onebox].to_s == "true"
+      post.custom_fields["hf_no_onebox"] = true
+      post.save_custom_fields
+    end
+  end
+
+  on(:post_process_cooked) do |doc, post|
+    if post.custom_fields["hf_no_onebox"]
+      doc
+        .css("aside.onebox")
+        .each do |node|
+          href = node.at_css("a")&.[]("href") || node["data-onebox-src"]
+          if href
+            safe = CGI.escapeHTML(href.to_s)
+            node.replace("<p><a href=\"#{safe}\">#{safe}</a></p>")
+          else
+            node.remove
+          end
+        end
+      doc.css("a.inline-onebox").each { |a| a.remove_attribute("class") }
+    end
+  end
 end
