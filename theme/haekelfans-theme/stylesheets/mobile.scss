@@ -20,9 +20,6 @@
     }
   }
 
-  .hf-fab {
-    display: flex;
-  }
 
   .hf-post-card {
     padding: 1em 0.9em 0.75em;
@@ -41,7 +38,7 @@
 }
 
 .hf-fab {
-  display: none;
+  display: flex;
   position: fixed;
   right: 18px;
   bottom: 20px;
@@ -57,4 +54,10 @@
   justify-content: center;
   box-shadow: 0 8px 20px rgba(234, 79, 134, 0.45);
   cursor: pointer;
+}
+
+@media (min-width: 1001px) {
+  .hf-fab {
+    display: none; // op desktop zit "Neues Thema" in de filterbalk
+  }
 }
