@@ -1,0 +1,55 @@
+// Profielversimpeling (spec §8): deze onderdelen bestaan niet in het
+// Häkelfans-theme. Geconsolideerd uit de eerdere custom CSS; de
+// route-redirects in hf-theme.gjs vangen directe URL's af.
+
+// Trust level en statistieken
+dt.trust-level,
+dd.trust-level,
+.top-section.stats-section,
+fieldset.control-group.other {
+  display: none !important;
+}
+
+// Activiteit-subnavigatie: alleen "Themen" blijft relevant
+.user-nav__activity-topics,
+.user-nav__activity-read,
+.user-nav__activity-replies,
+.user-nav__activity-drafts,
+.user-nav__activity-likes,
+.user-nav__activity-bookmarks {
+  display: none !important;
+}
+
+// Notificatie-subnavigatie
+.user-nav__notifications-responses,
+.user-nav__notifications-likes,
+.user-nav__notifications-mentions,
+.user-nav__notifications-edits,
+.user-nav__notifications-links {
+  display: none !important;
+}
+
+// Samenvatting en badges
+li.summary,
+li.user-nav__summary,
+.user-nav__badges,
+.badge-section {
+  display: none !important;
+}
+
+// Instellingen-items die leden niet nodig hebben
+.user-nav__preferences-tracking,
+.user-nav__preferences-users,
+.user-nav__preferences-navigation-menu,
+.user-nav__preferences-calendar-subscriptions,
+.user-nav__preferences-apps,
+.user-nav__preferences-interface,
+.pref-data-export,
+.pref-associated-accounts {
+  display: none !important;
+}
+
+// Composer-schakelaar (rich text toggle) verbergen
+.composer-toggle-switch {
+  display: none !important;
+}
