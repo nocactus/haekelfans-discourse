@@ -6,8 +6,10 @@ import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
 import { i18n } from "discourse-i18n";
 import HfComposer from "./composer";
+import HfOnlineWidget from "./online-widget";
 import HfPostCard from "./post-card";
 import HfPostModal from "./post-modal";
+import HfProfileCard from "./profile-card";
 
 export default class HfTimeline extends Component {
   @service router;
@@ -65,6 +67,14 @@ export default class HfTimeline extends Component {
 
   get newTopicLabel() {
     return i18n(themePrefix("hf.new_topic"));
+  }
+
+  get showProfileCard() {
+    return String(settings.show_profile_card) === "true";
+  }
+
+  get showOnlineWidget() {
+    return String(settings.show_online_widget) === "true";
   }
 
   get tabs() {
@@ -136,12 +146,24 @@ export default class HfTimeline extends Component {
       </div>
 
       <aside class="hf-timeline__aside">
-        {{! widgets volgen in Task 10 }}
+        {{#if this.showProfileCard}}
+          <HfProfileCard />
+        {{/if}}
+        {{#if this.showOnlineWidget}}
+          <HfOnlineWidget />
+        {{/if}}
       </aside>
 
       {{#if this.openTopic}}
         <HfPostModal @topic={{this.openTopic}} @onClose={{this.closeModal}} />
       {{/if}}
+
+      <button
+        type="button"
+        class="hf-fab"
+        aria-label={{this.newTopicLabel}}
+        {{on "click" this.newTopic}}
+      >＋</button>
     </div>
   </template>
 }
