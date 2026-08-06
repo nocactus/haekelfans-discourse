@@ -1,0 +1,52 @@
+en:
+  hf:
+    tabs:
+      aktuell: "Latest"
+      aktiv: "Active posts"
+      neu: "New"
+      meine: "My posts"
+    new_topic: "New topic"
+    filter:
+      categories: "Categories"
+      tags: "Tags"
+    like: "Like"
+    reply: "Comment"
+    weiterlesen: "read more"
+    view_all_replies:
+      one: "View %{count} comment"
+      other: "View all %{count} comments"
+    view_more_answers:
+      one: "View %{count} more reply"
+      other: "View %{count} more replies"
+    likers_summary:
+      one: "%{names} and %{count} other like this"
+      other: "%{names} and %{count} others like this"
+    likers_names_only: "%{names} like this"
+    reaction_count:
+      one: "%{count} comment"
+      other: "%{count} comments"
+    comment_placeholder: "Write a comment…"
+    answer: "Reply"
+    composer:
+      placeholder: "Tell us about your project…"
+      title_placeholder: "Title (optional)"
+      publish: "Publish"
+      link_preview: "Show link preview"
+      link_preview_hint: "off = link stays plain text"
+      error_generic: "That didn't work. Please try again."
+      posting_in: "posting in"
+    modal:
+      title: "Post by %{name}"
+      load_more: "Load more comments"
+      back_to_timeline: "Back to the timeline"
+    online:
+      title: "Who is online"
+      count:
+        one: "%{count} member online now"
+        other: "%{count} members online now"
+    profile_card:
+      received: "received"
+      given: "given"
+      topics: "topics created"
+      posts: "posts created"
+    post_unavailable: "This post is no longer available"

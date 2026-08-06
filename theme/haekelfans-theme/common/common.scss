@@ -1,0 +1,25 @@
+:root {
+  --hf-accent: #ea4f86;
+  --hf-accent-soft: #f6e8ea;
+  --hf-bg: #faf7f5;
+  --hf-card: #ffffff;
+  --hf-ink: #162c2d;
+  --hf-muted: #808989;
+  --hf-line: #efe7e3;
+  --hf-bubble: #f6f2ef;
+  --hf-footer: #152b2c;
+  --hf-radius: 16px;
+  --hf-shadow: 0 1px 2px rgba(22, 44, 45, 0.05), 0 10px 28px rgba(22, 44, 45, 0.07);
+}
+
+body {
+  background: var(--hf-bg);
+  color: var(--hf-ink);
+}
+
+.hf-card {
+  background: var(--hf-card);
+  border-radius: var(--hf-radius);
+  box-shadow: var(--hf-shadow);
+  padding: 1.25em;
+}

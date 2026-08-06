@@ -1,0 +1,71 @@
+header_links:
+  type: list
+  list_type: compact
+  default: "Häkelanleitungen,https://haekelfans.de/haekelanleitungen|Blog,https://haekelfans.de/blog|Mein Häkelfans,https://mitglieder.haekelfans.de|Impressum,https://seiten.haekelfans.de/impressum"
+  description:
+    de: "Header-Links: Label,URL — getrennt mit |"
+    en: "Header links: Label,URL — separated by |"
+chat_icon_enabled:
+  type: bool
+  default: false
+  description:
+    de: "Chat-Symbol im Header anzeigen (für spätere Chat-Einführung)"
+    en: "Show chat icon in the header (for later chat rollout)"
+replies_shown:
+  type: integer
+  default: 2
+  min: 0
+  max: 5
+  description:
+    de: "Anzahl sichtbarer Reaktionen unter jedem Beitrag in der Timeline"
+    en: "Number of visible replies under each post in the timeline"
+show_profile_card:
+  type: bool
+  default: true
+  description:
+    de: "Profilkarte in der rechten Spalte anzeigen"
+    en: "Show profile card in the right column"
+show_online_widget:
+  type: bool
+  default: true
+  description:
+    de: "»Wer ist online«-Widget in der rechten Spalte anzeigen"
+    en: "Show the “Who is online” widget in the right column"
+excerpt_length:
+  type: integer
+  default: 300
+  description:
+    de: "Anzahl Zeichen des Beitragstexts in der Timeline vor »weiterlesen«"
+    en: "Characters of post text shown in the timeline before “read more”"
+default_category_id:
+  type: integer
+  default: 0
+  description:
+    de: "Standard-Kategorie für neue Beiträge (0 = erste beschreibbare Kategorie)"
+    en: "Default category for new posts (0 = first writable category)"
+footer_links_service:
+  type: list
+  list_type: compact
+  default: "Impressum,https://seiten.haekelfans.de/impressum|Allgemeine Geschäftsbedingungen,https://seiten.haekelfans.de/agb|Datenschutzerklärung,https://seiten.haekelfans.de/datenschutz|Nutzungsbedingungen,https://seiten.haekelfans.de/nutzungsbedingungen|Lizenzbedingungen,https://seiten.haekelfans.de/lizenzbedingungen"
+  description:
+    de: "Footer-Spalte »Service«: Label,URL — getrennt mit |"
+    en: "Footer column “Service”: Label,URL — separated by |"
+footer_links_anleitungen:
+  type: list
+  list_type: compact
+  default: "Häkelanleitungen,https://haekelfans.de/haekelanleitungen|Meine Favoriten,https://mitglieder.haekelfans.de/favoriten"
+  description:
+    de: "Footer-Spalte »Häkelanleitungen«: Label,URL — getrennt mit |"
+    en: "Footer column “Häkelanleitungen”: Label,URL — separated by |"
+footer_social_instagram:
+  type: string
+  default: "https://www.instagram.com/haekelfans"
+  description:
+    de: "Instagram-URL im Footer (leer = ausblenden)"
+    en: "Instagram URL in the footer (empty = hide)"
+footer_social_facebook:
+  type: string
+  default: "https://www.facebook.com/haekelfans"
+  description:
+    de: "Facebook-URL im Footer (leer = ausblenden)"
+    en: "Facebook URL in the footer (empty = hide)"

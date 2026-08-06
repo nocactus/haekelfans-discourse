@@ -1,0 +1,52 @@
+de:
+  hf:
+    tabs:
+      aktuell: "Aktuell"
+      aktiv: "Aktive Beiträge"
+      neu: "Neu"
+      meine: "Meine Beiträge"
+    new_topic: "Neues Thema"
+    filter:
+      categories: "Kategorien"
+      tags: "Schlagwörter"
+    like: "Gefällt mir"
+    reply: "Reaktion"
+    weiterlesen: "weiterlesen"
+    view_all_replies:
+      one: "%{count} Reaktion ansehen"
+      other: "Alle %{count} Reaktionen ansehen"
+    view_more_answers:
+      one: "%{count} weitere Antwort ansehen"
+      other: "%{count} weitere Antworten ansehen"
+    likers_summary:
+      one: "%{names} und %{count} anderem gefällt das"
+      other: "%{names} und %{count} anderen gefällt das"
+    likers_names_only: "%{names} gefällt das"
+    reaction_count:
+      one: "%{count} Reaktion"
+      other: "%{count} Reaktionen"
+    comment_placeholder: "Schreib eine Reaktion…"
+    answer: "Antworten"
+    composer:
+      placeholder: "Erzähl uns von deinem Projekt…"
+      title_placeholder: "Titel (optional)"
+      publish: "Veröffentlichen"
+      link_preview: "Link-Vorschau anzeigen"
+      link_preview_hint: "aus = Link bleibt einfacher Text"
+      error_generic: "Das hat leider nicht geklappt. Bitte versuche es noch einmal."
+      posting_in: "postet in"
+    modal:
+      title: "Beitrag von %{name}"
+      load_more: "Weitere Reaktionen laden"
+      back_to_timeline: "Zur Häkelstube"
+    online:
+      title: "Wer ist online"
+      count:
+        one: "%{count} Mitglied jetzt online"
+        other: "%{count} Mitglieder jetzt online"
+    profile_card:
+      received: "erhalten"
+      given: "gegeben"
+      topics: "Themen erstellt"
+      posts: "Beiträge erstellt"
+    post_unavailable: "Dieser Beitrag ist nicht mehr verfügbar"
