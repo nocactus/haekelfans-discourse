@@ -1,0 +1,47 @@
+import { visit } from "@ember/test-helpers";
+import { test } from "qunit";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
+import topicFixtures from "discourse/tests/fixtures/discovery-fixtures";
+
+export function hfTopicListResponse() {
+  const list = structuredClone(topicFixtures["/latest.json"]);
+  const t = list.topic_list.topics[0];
+  t.title = "Decke gehäkelt";
+  t.hf_first_post_id = 101;
+  t.hf_images = [
+    { url: "/images/d1.jpg", thumb_url: "/images/d1.jpg", width: 1200, height: 800 },
+  ];
+  t.hf_reply_total = 3;
+  t.hf_likers = { names: ["Karin", "Brenda"], count: 5, current_user_liked: false };
+  t.hf_replies = [
+    {
+      post_id: 11,
+      post_number: 3,
+      reply_to_post_number: null,
+      username: "marga",
+      name: "Marga de Boer",
+      avatar_template: "/letter_avatar_proxy/v4/letter/m/aaaaaa/{size}.png",
+      excerpt: "Das wird schon toll!",
+      created_at: "2026-08-01T10:00:00Z",
+      like_count: 1,
+      current_user_reacted: false,
+    },
+  ];
+  return list;
+}
+
+acceptance("Häkelfans | timeline", function (needs) {
+  needs.user();
+  needs.pretender((server, helper) => {
+    server.get("/latest.json", () => helper.response(hfTopicListResponse()));
+  });
+
+  test("toont tijdlijnkaarten in plaats van de topiclijst", async function (assert) {
+    await visit("/latest");
+    assert.dom(".hf-post-card").exists("tijdlijnkaart wordt gerenderd");
+    assert.dom(".topic-list").doesNotExist("standaard topiclijst is vervangen");
+    assert
+      .dom(".hf-post-card .hf-post-card__title")
+      .hasText("Decke gehäkelt", "titel op de kaart");
+  });
+});
