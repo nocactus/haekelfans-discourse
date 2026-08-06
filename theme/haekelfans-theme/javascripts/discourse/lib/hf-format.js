@@ -1,3 +1,4 @@
+import { htmlSafe } from "@ember/template";
 import { avatarUrl } from "discourse/lib/avatar-utils";
 import { relativeAge } from "discourse/lib/formatter";
 
@@ -12,5 +13,6 @@ export function hfTimeAgo(dateLike) {
   if (!dateLike) {
     return "";
   }
-  return relativeAge(new Date(dateLike), { format: "medium-with-ago" });
+  // relativeAge geeft bij "medium-with-ago" een html-string terug
+  return htmlSafe(relativeAge(new Date(dateLike), { format: "medium-with-ago" }));
 }
