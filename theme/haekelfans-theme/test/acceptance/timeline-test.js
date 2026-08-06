@@ -44,4 +44,14 @@ acceptance("Häkelfans | timeline", function (needs) {
       .dom(".hf-post-card .hf-post-card__title")
       .hasText("Decke gehäkelt", "titel op de kaart");
   });
+
+  test("kaart toont likers, replies en reactieveld", async function (assert) {
+    await visit("/latest");
+    const card = ".hf-post-card:nth-of-type(1)";
+    assert.dom(`${card} .hf-social__likers`).includesText("Karin");
+    assert.dom(`${card} .hf-comment`).exists({ count: 1 });
+    assert.dom(`${card} .hf-comment-box textarea`).exists();
+    assert.dom(`${card} .hf-view-all`).includesText("3");
+    assert.dom(`${card} .hf-post-card__gallery img`).exists();
+  });
 });
