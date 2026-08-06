@@ -1,11 +1,26 @@
 import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
+import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
 import { i18n } from "discourse-i18n";
 import HfPostCard from "./post-card";
+import HfPostModal from "./post-modal";
 
 export default class HfTimeline extends Component {
   @service router;
+
+  @tracked openTopic = null;
+
+  @action
+  openModal(topic) {
+    this.openTopic = topic;
+  }
+
+  @action
+  closeModal() {
+    this.openTopic = null;
+  }
 
   observeSentinel = modifier((element) => {
     const observer = new IntersectionObserver(
@@ -87,7 +102,7 @@ export default class HfTimeline extends Component {
 
         <div class="hf-timeline__list">
           {{#each this.topics as |topic|}}
-            <HfPostCard @topic={{topic}} />
+            <HfPostCard @topic={{topic}} @onOpen={{this.openModal}} />
           {{/each}}
         </div>
         <div class="hf-timeline__sentinel" {{this.observeSentinel}}></div>
@@ -96,6 +111,10 @@ export default class HfTimeline extends Component {
       <aside class="hf-timeline__aside">
         {{! widgets volgen in Task 10 }}
       </aside>
+
+      {{#if this.openTopic}}
+        <HfPostModal @topic={{this.openTopic}} @onClose={{this.closeModal}} />
+      {{/if}}
     </div>
   </template>
 }

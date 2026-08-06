@@ -33,10 +33,66 @@ export function hfTopicListResponse() {
   return list;
 }
 
+export function hfTreeResponse(topicId) {
+  return {
+    topic_id: topicId,
+    total: 1,
+    page: 0,
+    per_page: 50,
+    replies: [
+      {
+        post_id: 11,
+        post_number: 3,
+        reply_to_post_number: null,
+        username: "marga",
+        name: "Marga de Boer",
+        avatar_template: "/letter_avatar_proxy/v4/letter/m/aaaaaa/{size}.png",
+        cooked: "<p>Das wird schon toll!</p>",
+        created_at: "2026-08-01T10:00:00Z",
+        like_count: 1,
+        current_user_reacted: false,
+        children: [
+          {
+            post_id: 12,
+            post_number: 4,
+            reply_to_post_number: 3,
+            username: "ramona",
+            name: "Ramona Klein",
+            avatar_template: "/letter_avatar_proxy/v4/letter/r/bbbbbb/{size}.png",
+            cooked: "<p>Danke Marga!</p>",
+            created_at: "2026-08-02T10:00:00Z",
+            like_count: 0,
+            current_user_reacted: false,
+            children: [],
+          },
+        ],
+      },
+    ],
+  };
+}
+
 acceptance("Häkelfans | timeline", function (needs) {
   needs.user();
   needs.pretender((server, helper) => {
     server.get("/latest.json", () => helper.response(hfTopicListResponse()));
+    server.get("/haekelfans/topic/:id/tree.json", (request) =>
+      helper.response(hfTreeResponse(parseInt(request.params.id, 10)))
+    );
+    server.get("/t/:id.json", (request) =>
+      helper.response({
+        id: parseInt(request.params.id, 10),
+        title: "Decke gehäkelt",
+        post_stream: {
+          posts: [
+            {
+              id: 101,
+              post_number: 1,
+              cooked: "<p>Endlich ist meine Decke fertig.</p>",
+            },
+          ],
+        },
+      })
+    );
   });
 
   test("toont tijdlijnkaarten in plaats van de topiclijst", async function (assert) {
@@ -70,5 +126,21 @@ acceptance("Häkelfans | timeline", function (needs) {
     assert.dom(".hf-lightbox__count").includesText("2 / 6", "pijl navigeert");
     await triggerKeyEvent(document.body, "keydown", "Escape");
     assert.dom(".hf-lightbox").doesNotExist("Esc sluit");
+  });
+
+  test("berichtmodal toont volledige boom met uitklapbare niveaus", async function (assert) {
+    await visit("/latest");
+    await click(".hf-post-card:nth-of-type(1) .hf-view-all");
+    assert.dom(".hf-post-modal").exists("modal opent");
+    assert.dom(".hf-post-modal .hf-comment").exists({ count: 1 }, "niveau 1 zichtbaar");
+    assert
+      .dom(".hf-post-modal .hf-tree-node__more")
+      .includesText("1", "toggle voor 1 antwoord");
+    await click(".hf-post-modal .hf-tree-node__more");
+    assert
+      .dom(".hf-post-modal .hf-comment")
+      .exists({ count: 2 }, "niveau 2 uitgeklapt");
+    await click(".hf-post-modal__close");
+    assert.dom(".hf-post-modal").doesNotExist("modal sluit");
   });
 });
