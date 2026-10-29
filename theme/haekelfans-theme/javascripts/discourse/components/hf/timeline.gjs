@@ -89,7 +89,7 @@ export default class HfTimeline extends Component {
       },
       {
         key: "aktiv",
-        url: "/latest",
+        url: "/latest?order=activity",
         label: i18n(themePrefix("hf.tabs.aktiv")),
         active:
           this.currentPath.startsWith("/latest") &&

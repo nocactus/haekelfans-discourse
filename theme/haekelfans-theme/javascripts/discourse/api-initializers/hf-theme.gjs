@@ -13,6 +13,12 @@ export default apiInitializer((api) => {
   // Profiel-versimpeling: routes van geschrapte onderdelen sturen door
   // naar de accountinstellingen (spec §8).
   api.onPageChange((url) => {
+    // Startpagina altijd chronologisch (nieuwste eerst, geen bumping)
+    if (url === "/" || url === "/latest") {
+      api.container.lookup("service:router").replaceWith("/latest?order=created");
+      return;
+    }
+
     const removed =
       /^\/u\/([^/]+)\/(badges|summary|preferences\/(tracking|users|navigation-menu|apps|calendar-subscriptions))/;
     const match = url.match(removed);
