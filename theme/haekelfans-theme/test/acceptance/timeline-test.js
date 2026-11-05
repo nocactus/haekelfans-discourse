@@ -265,6 +265,12 @@ acceptance("Häkelfans | categorieënpagina", function (needs) {
 acceptance("Häkelfans | categorie-tijdlijn", function (needs) {
   needs.user();
   needs.pretender((server, helper) => {
+    server.get("/haekelfans/online.json", () =>
+      helper.response({ count: 0, users: [] })
+    );
+    server.get("/u/:username/summary.json", () =>
+      helper.response({ user_summary: { likes_given: 0, likes_received: 0, topic_count: 0, post_count: 0 } })
+    );
     server.get("/c/bug/1/l/latest.json", () => {
       const list = hfTopicListResponse();
       const about = structuredClone(list.topic_list.topics[0]);
