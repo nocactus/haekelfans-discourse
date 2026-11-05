@@ -130,7 +130,7 @@
     width: 8px;
     height: 8px;
     border-radius: 50%;
-    background: #4caf7d;
+    background: var(--hf-accent);
     margin-right: 6px;
   }
 }
@@ -222,7 +222,7 @@
   }
 
   .sidebar-section-link .sidebar-section-link-prefix .d-icon {
-    color: var(--hf-muted);
+    color: var(--hf-accent);
   }
 
   .sidebar-section-header,

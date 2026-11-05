@@ -2,7 +2,7 @@
   "name": "Häkelfans",
   "component": false,
   "authors": "Timo Roosendaal",
-  "theme_version": "1.1.0",
+  "theme_version": "1.1.1",
   "minimum_discourse_version": "3.4.0",
   "learn_more": "",
   "modifiers": {
@@ -29,12 +29,12 @@
       "primary": "162c2d",
       "secondary": "faf7f5",
       "tertiary": "ea4f86",
-      "quaternary": "518085",
+      "quaternary": "ea4f86",
       "header_background": "ffffff",
       "header_primary": "162c2d",
       "highlight": "f6e8ea",
       "danger": "c62828",
-      "success": "4caf7d",
+      "success": "ea4f86",
       "love": "ea4f86"
     }
   }
