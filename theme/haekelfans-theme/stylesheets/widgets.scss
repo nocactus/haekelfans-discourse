@@ -192,6 +192,23 @@
     border: none;
   }
 
+  // Rustige, leesbare links: donkere inkt-tekst, gedempte iconen.
+  // (Zonder dit pakt core een vale mengkleur van primary/secondary.)
+  .sidebar-section-link,
+  .sidebar-section-link .sidebar-section-link-content-text {
+    color: var(--hf-ink);
+  }
+
+  .sidebar-section-link .sidebar-section-link-prefix .d-icon {
+    color: var(--hf-muted);
+  }
+
+  .sidebar-section-header,
+  .sidebar-section-header-text,
+  .sidebar-section-header .d-icon {
+    color: var(--hf-muted);
+  }
+
   .sidebar-section-link:hover {
     background: var(--hf-accent-soft);
   }
@@ -199,6 +216,10 @@
   .sidebar-section-link.active {
     background: var(--hf-accent-soft);
     font-weight: 700;
+
+    .sidebar-section-link-prefix .d-icon {
+      color: var(--hf-accent);
+    }
   }
 
   .sidebar-footer-wrapper {
