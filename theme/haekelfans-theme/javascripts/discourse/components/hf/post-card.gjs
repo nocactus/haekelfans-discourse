@@ -129,7 +129,7 @@ export default class HfPostCard extends Component {
         username: post.username,
         name: post.name,
         avatar_template: post.avatar_template,
-        excerpt: post.cooked?.replace(/<[^>]+>/g, "").slice(0, 200),
+        cooked: post.cooked,
         created_at: post.created_at,
         like_count: 0,
         current_user_reacted: false,
