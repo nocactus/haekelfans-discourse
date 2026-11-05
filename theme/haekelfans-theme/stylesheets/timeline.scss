@@ -133,14 +133,13 @@
 }
 
 .hf-gallery {
-  display: grid;
-  gap: 5px;
   border-radius: 12px;
   overflow: hidden;
 
   &__cell {
     position: relative;
     display: block;
+    width: 100%;
     padding: 0;
     border: none;
     background: var(--hf-bubble);
@@ -150,46 +149,30 @@
     img {
       display: block;
       width: 100%;
-      height: 100%;
-      object-fit: cover;
+      height: auto; // eigen verhouding: niets wordt weggesneden
     }
   }
 
-  &.m1 {
-    grid-template-columns: 1fr;
-
-    .hf-gallery__cell img {
-      height: auto;
-      max-height: 520px;
-    }
+  // Eén foto: volle breedte in de eigen verhouding. Alleen extreem hoge
+  // foto's worden begrensd, en dan passend (contain) i.p.v. bijgesneden.
+  &.m1 .hf-gallery__cell img {
+    max-height: 85vh;
+    object-fit: contain;
   }
 
-  &.m2 {
-    grid-template-columns: 1fr 1fr;
-    grid-auto-rows: 220px;
-  }
-
-  &.m3 {
-    grid-template-columns: 1.7fr 1fr;
-    grid-auto-rows: 110px;
-
-    .hf-gallery__cell:first-child {
-      grid-row: span 2;
-    }
-  }
-
-  &.m4 {
-    grid-template-columns: 1fr 1fr;
-    grid-auto-rows: 130px;
-  }
-
+  // Meerdere foto's: echte masonry in twee kolommen, elke foto in de
+  // eigen verhouding.
+  &.m2,
+  &.m3,
+  &.m4,
   &.m5 {
-    grid-template-columns: 1.7fr 1fr 1fr;
-    grid-auto-rows: 105px;
+    columns: 2;
+    column-gap: 5px;
 
-    .hf-gallery__cell:first-child {
-      grid-column: 1;
-      grid-row: span 2;
+    .hf-gallery__cell {
+      break-inside: avoid;
+      margin-bottom: 5px;
+      border-radius: 0;
     }
   }
 
