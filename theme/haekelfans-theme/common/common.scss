@@ -19,6 +19,43 @@
   --hf-shadow: 0 1px 2px rgba(22, 44, 45, 0.05), 0 10px 28px rgba(22, 44, 45, 0.07);
 }
 
+// Core-kleuren vastzetten, los van het gekozen kleurenpalet:
+// geen groen/teal in de UI, overal inkt + roze accent.
+:root {
+  --primary: #162c2d;
+  --primary-rgb: 22, 44, 45;
+  --primary-very-high: #2a3d3e;
+  --primary-high: #4a5757;
+  --primary-medium: #808989;
+  --primary-low-mid: #b9bcbb;
+  --primary-low: #e6e1dd;
+  --primary-very-low: #f3efec;
+  --secondary: #faf7f5;
+  --secondary-rgb: 250, 247, 245;
+  --tertiary: #ea4f86;
+  --tertiary-rgb: 234, 79, 134;
+  --tertiary-high: #d43f75;
+  --tertiary-medium: #f08fb2;
+  --tertiary-low: #f6c9d9;
+  --tertiary-very-low: #fbeef3;
+  --tertiary-hover: #d43f75;
+  --quaternary: #ea4f86;
+  --quaternary-low: #f6c9d9;
+  --highlight: #f6e8ea;
+  --highlight-low: #fbf3f4;
+  --highlight-medium: #f6e8ea;
+  --highlight-high: #f0d3d8;
+  --success: #ea4f86;
+  --success-low: #fbeef3;
+  --success-medium: #f08fb2;
+  --success-hover: #d43f75;
+  --love: #ea4f86;
+  --love-low: #fbeef3;
+  --header_background: #ffffff;
+  --header_primary: #162c2d;
+  --d-sidebar-background: #ffffff;
+}
+
 body {
   background: var(--hf-bg);
   color: var(--hf-ink);
