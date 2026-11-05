@@ -3,6 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { modifier } from "ember-modifier";
+import icon from "discourse/helpers/d-icon";
 
 export default class HfLightbox extends Component {
   @tracked index = this.args.startIndex ?? 0;
@@ -86,15 +87,15 @@ export default class HfLightbox extends Component {
       {{on "pointerup" this.pointerUp}}
     >
       <span class="hf-lightbox__count">{{this.countLabel}}</span>
-      <button type="button" class="hf-lightbox__close" {{on "click" this.close}}>✕</button>
+      <button type="button" class="hf-lightbox__close" {{on "click" this.close}}>{{icon "xmark"}}</button>
       {{#if this.current}}
         <img class="hf-lightbox__img" src={{this.current.url}} alt="" />
       {{/if}}
       {{#if this.args.title}}
         <p class="hf-lightbox__caption">{{@title}}</p>
       {{/if}}
-      <button type="button" class="hf-lightbox__arrow is-prev" {{on "click" this.prev}}>‹</button>
-      <button type="button" class="hf-lightbox__arrow is-next" {{on "click" this.next}}>›</button>
+      <button type="button" class="hf-lightbox__arrow is-prev" {{on "click" this.prev}}>{{icon "chevron-left"}}</button>
+      <button type="button" class="hf-lightbox__arrow is-next" {{on "click" this.next}}>{{icon "chevron-right"}}</button>
     </div>
   </template>
 }

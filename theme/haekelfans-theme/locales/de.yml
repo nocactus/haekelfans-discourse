@@ -1,5 +1,8 @@
 de:
   hf:
+    filter:
+      categories: "Kategorien"
+      tags: "Schlagwörter"
     tabs:
       aktuell: "Aktuell"
       aktiv: "Aktive Beiträge"
@@ -47,6 +50,6 @@ de:
     profile_card:
       received: "erhalten"
       given: "gegeben"
-      topics: "Themen erstellt"
-      posts: "Beiträge erstellt"
+      topics: "Themen"
+      posts: "Beiträge"
     post_unavailable: "Dieser Beitrag ist nicht mehr verfügbar"

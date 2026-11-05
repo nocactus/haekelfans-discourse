@@ -1,5 +1,8 @@
 en:
   hf:
+    filter:
+      categories: "Categories"
+      tags: "Tags"
     tabs:
       aktuell: "Latest"
       aktiv: "Active posts"
@@ -47,6 +50,6 @@ en:
     profile_card:
       received: "received"
       given: "given"
-      topics: "topics created"
-      posts: "posts created"
+      topics: "topics"
+      posts: "posts"
     post_unavailable: "This post is no longer available"

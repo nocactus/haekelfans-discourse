@@ -4,6 +4,7 @@ import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { htmlSafe } from "@ember/template";
+import icon from "discourse/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import { hfAvatarUrl, hfTimeAgo } from "../../lib/hf-format";
 import { toggleLike } from "../../lib/hf-like";
@@ -61,7 +62,7 @@ export default class HfComment extends Component {
             <div class="hf-comment__text">{{this.bodyHtml}}</div>
           {{/if}}
           {{#if this.likeCount}}
-            <span class="hf-comment__likepill">♥ {{this.likeCount}}</span>
+            <span class="hf-comment__likepill">{{icon "heart"}} {{this.likeCount}}</span>
           {{/if}}
         </div>
         <div class="hf-comment__meta">
