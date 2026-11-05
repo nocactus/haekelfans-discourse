@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
+import icon from "discourse/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import HfPostView from "../../components/hf/post-view";
 import { hfAvatarUrl, hfTimeAgo } from "../../lib/hf-format";
@@ -52,7 +53,7 @@ export default class HfTopicView extends Component {
     {{#if this.isRegularTopic}}
       <div class="hf-topic-view">
         <a class="hf-topic-view__back" href="/latest?order=created">
-          ← {{this.backLabel}}
+          {{icon "arrow-left"}} {{this.backLabel}}
         </a>
         <article class="hf-card">
           <header class="hf-post-card__head">

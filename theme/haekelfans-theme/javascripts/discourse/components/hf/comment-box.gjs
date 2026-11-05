@@ -3,6 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import icon from "discourse/helpers/d-icon";
 import { ajax } from "discourse/lib/ajax";
 import { i18n } from "discourse-i18n";
 import { hfAvatarUrl } from "../../lib/hf-format";
@@ -88,7 +89,7 @@ export default class HfCommentBox extends Component {
           class="hf-comment-box__send"
           disabled={{this.busy}}
           title={{this.sendTitle}}
-        >➤</button>
+        >{{icon "paper-plane"}}</button>
       </div>
       {{#if this.error}}
         <p class="hf-comment-box__error">{{this.error}}</p>

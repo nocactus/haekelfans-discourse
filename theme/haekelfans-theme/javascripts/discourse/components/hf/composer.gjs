@@ -5,6 +5,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
+import icon from "discourse/helpers/d-icon";
 import { ajax } from "discourse/lib/ajax";
 import { i18n } from "discourse-i18n";
 import { generateTitle } from "../../lib/hf-composer";
@@ -239,7 +240,7 @@ export default class HfComposer extends Component {
             class="hf-composer__opener"
             {{on "click" this.expand}}
           >{{this.placeholderLabel}}</button>
-          <button type="button" class="hf-composer__cam" {{on "click" this.expand}}>📷</button>
+          <button type="button" class="hf-composer__cam" {{on "click" this.expand}}>{{icon "camera"}}</button>
         </div>
       {{else}}
         <form class="hf-composer__form" {{on "submit" this.publish}}>
@@ -266,7 +267,7 @@ export default class HfComposer extends Component {
                   type="button"
                   class="hf-composer__thumb-x"
                   {{on "click" (fn this.removeUpload upload)}}
-                >✕</button>
+                >{{icon "xmark"}}</button>
               </span>
             {{/each}}
             <label class="hf-composer__thumb hf-composer__add">

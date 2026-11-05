@@ -14,6 +14,7 @@ export function hfTopicListResponse() {
     width: 1200,
     height: 800,
   }));
+  t.tags = [{ id: 1, name: "amigurumi", slug: "amigurumi" }, "tipps"];
   t.hf_reply_total = 3;
   t.hf_likers = { names: ["Karin", "Brenda"], count: 5, current_user_liked: false };
   t.hf_replies = [
@@ -143,6 +144,17 @@ acceptance("Häkelfans | timeline", function (needs) {
     assert.dom(`${card} .hf-comment-box textarea`).exists();
     assert.dom(`${card} .hf-view-all`).includesText("3");
     assert.dom(`${card} .hf-post-card__gallery img`).exists();
+    assert
+      .dom(`${card} .hf-post-card__tags .hf-tag:nth-child(1)`)
+      .hasText("amigurumi", "tag-object toont naam i.p.v. [object Object]");
+    assert.dom(`${card} .hf-post-card__tags .hf-tag:nth-child(2)`).hasText("tipps");
+    assert
+      .dom(`${card} .hf-actions__like svg.d-icon`)
+      .exists("like-knop gebruikt SVG-icoon");
+    assert.dom(".hf-composer__cam svg.d-icon").exists("camera als SVG-icoon");
+    assert
+      .dom(document.body)
+      .hasClass("hf-timeline-active", "body-class verbergt core-navigatie (CSS)");
   });
 
   test("masonry-galerij met +N-overlay en lightbox", async function (assert) {

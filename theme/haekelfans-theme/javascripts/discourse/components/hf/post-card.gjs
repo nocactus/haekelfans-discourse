@@ -3,6 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { htmlSafe } from "@ember/template";
+import icon from "discourse/helpers/d-icon";
 import { ajax } from "discourse/lib/ajax";
 import { i18n } from "discourse-i18n";
 import { hfAvatarUrl, hfTimeAgo } from "../../lib/hf-format";
@@ -51,6 +52,17 @@ export default class HfPostCard extends Component {
 
   get images() {
     return this.topic.hf_images ?? [];
+  }
+
+  get tagNames() {
+    // Afhankelijk van Discourse-versie zijn tags strings of objecten.
+    return (this.topic.tags ?? [])
+      .map((t) => (typeof t === "string" ? t : t?.name))
+      .filter(Boolean);
+  }
+
+  get likeIcon() {
+    return this.liked ? "heart" : "far-heart";
   }
 
   get replies() {
@@ -189,9 +201,9 @@ export default class HfPostCard extends Component {
         </div>
       {{/if}}
 
-      {{#if @topic.tags.length}}
+      {{#if this.tagNames.length}}
         <div class="hf-post-card__tags">
-          {{#each @topic.tags as |tag|}}
+          {{#each this.tagNames as |tag|}}
             <a class="hf-tag" href="/tag/{{tag}}">{{tag}}</a>
           {{/each}}
         </div>
@@ -200,7 +212,7 @@ export default class HfPostCard extends Component {
       <div class="hf-social">
         <span class="hf-social__likers">
           {{#if this.likersLabel}}
-            <span class="hf-social__heart">♥</span>
+            <span class="hf-social__heart">{{icon "heart"}}</span>
             {{this.likersLabel}}
           {{/if}}
         </span>
@@ -216,12 +228,12 @@ export default class HfPostCard extends Component {
           type="button"
           class="hf-actions__like {{if this.liked 'is-liked'}}"
           {{on "click" this.toggleTopicLike}}
-        >♥ {{this.likeLabel}}</button>
+        >{{icon this.likeIcon}} {{this.likeLabel}}</button>
         <button
           type="button"
           class="hf-actions__reply"
           {{on "click" this.openModal}}
-        >💬 {{this.replyLabel}}</button>
+        >{{icon "far-comment"}} {{this.replyLabel}}</button>
       </div>
 
       {{#if this.replies.length}}

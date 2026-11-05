@@ -4,6 +4,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
+import icon from "discourse/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import HfComposer from "./composer";
 import HfOnlineWidget from "./online-widget";
@@ -38,6 +39,20 @@ export default class HfTimeline extends Component {
   @action
   closeModal() {
     this.openTopic = null;
+  }
+
+  // De eigen filterbalk vervangt de core-navigatie (anders staan er twee).
+  markActive = modifier(() => {
+    document.body.classList.add("hf-timeline-active");
+    return () => document.body.classList.remove("hf-timeline-active");
+  });
+
+  get categoriesLabel() {
+    return i18n(themePrefix("hf.filter.categories"));
+  }
+
+  get tagsLabel() {
+    return i18n(themePrefix("hf.filter.tags"));
   }
 
   observeSentinel = modifier((element) => {
@@ -117,9 +132,15 @@ export default class HfTimeline extends Component {
   }
 
   <template>
-    <div class="hf-timeline">
+    <div class="hf-timeline" {{this.markActive}}>
       <div class="hf-timeline__main">
         <nav class="hf-filterbar hf-card">
+          <a class="hf-filterbar__dd" href="/categories">
+            {{this.categoriesLabel}} {{icon "chevron-right"}}
+          </a>
+          <a class="hf-filterbar__dd" href="/tags">
+            {{this.tagsLabel}} {{icon "chevron-right"}}
+          </a>
           <div class="hf-filterbar__tabs">
             {{#each this.tabs as |tab|}}
               <a
@@ -132,7 +153,7 @@ export default class HfTimeline extends Component {
             type="button"
             class="hf-filterbar__new"
             {{on "click" this.newTopic}}
-          >✎ {{this.newTopicLabel}}</button>
+          >{{icon "plus"}} {{this.newTopicLabel}}</button>
         </nav>
 
         <HfComposer @onRegister={{this.registerComposer}} />
@@ -163,7 +184,7 @@ export default class HfTimeline extends Component {
         class="hf-fab"
         aria-label={{this.newTopicLabel}}
         {{on "click" this.newTopic}}
-      >＋</button>
+      >{{icon "plus"}}</button>
     </div>
   </template>
 }

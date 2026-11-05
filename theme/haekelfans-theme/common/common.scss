@@ -24,9 +24,23 @@ body {
   color: var(--hf-ink);
 }
 
+// Vaste basismaat (zoals de mockup): onafhankelijk van de lettergrootte
+// die core of de gebruiker instelt, zodat verhoudingen strak blijven.
+.hf-timeline,
+.hf-post-modal,
+.hf-topic-view {
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+// Eigen filterbalk vervangt de core-navigatie op de tijdlijn.
+body.hf-timeline-active .list-controls {
+  display: none;
+}
+
 .hf-card {
   background: var(--hf-card);
   border-radius: var(--hf-radius);
   box-shadow: var(--hf-shadow);
-  padding: 1.25em;
+  padding: 20px 20px 14px;
 }

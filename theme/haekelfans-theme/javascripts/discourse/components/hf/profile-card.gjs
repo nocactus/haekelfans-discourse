@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
+import icon from "discourse/helpers/d-icon";
 import { ajax } from "discourse/lib/ajax";
 import { i18n } from "discourse-i18n";
 import { hfAvatarUrl } from "../../lib/hf-format";
@@ -58,9 +59,9 @@ export default class HfProfileCard extends Component {
           </div>
         </div>
         {{#if this.summary}}
-          <div class="hf-profile-card__stats">
-            <span><b>{{this.summary.likes_received}} ♥</b> {{this.receivedLabel}}</span>
-            <span><b>{{this.summary.likes_given}} ♥</b> {{this.givenLabel}}</span>
+          <div class="hf-profile-card__stats is-likes">
+            <span><b>{{this.summary.likes_received}} {{icon "heart"}}</b> {{this.receivedLabel}}</span>
+            <span><b>{{this.summary.likes_given}} {{icon "heart"}}</b> {{this.givenLabel}}</span>
           </div>
           <div class="hf-profile-card__stats">
             <span><b>{{this.summary.topic_count}}</b> {{this.topicsLabel}}</span>
@@ -68,10 +69,10 @@ export default class HfProfileCard extends Component {
           </div>
         {{/if}}
         <div class="hf-profile-card__links">
-          <a href="/u/{{this.currentUser.username}}" title="Profil">👤</a>
-          <a href="/u/{{this.currentUser.username}}/preferences/account" title="Einstellungen">⚙️</a>
-          <a href="/u/{{this.currentUser.username}}/activity/bookmarks" title="Lesezeichen">🔖</a>
-          <a href="/u/{{this.currentUser.username}}/messages" title="Nachrichten">✉️</a>
+          <a href="/u/{{this.currentUser.username}}" title="Profil">{{icon "user"}}</a>
+          <a href="/u/{{this.currentUser.username}}/preferences/account" title="Einstellungen">{{icon "gear"}}</a>
+          <a href="/u/{{this.currentUser.username}}/activity/bookmarks" title="Lesezeichen">{{icon "bookmark"}}</a>
+          <a href="/u/{{this.currentUser.username}}/messages" title="Nachrichten">{{icon "envelope"}}</a>
         </div>
       </div>
     {{/if}}

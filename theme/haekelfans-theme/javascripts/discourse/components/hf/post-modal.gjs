@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { modifier } from "ember-modifier";
+import icon from "discourse/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import { hfAvatarUrl, hfTimeAgo } from "../../lib/hf-format";
 import HfPostView from "./post-view";
@@ -74,7 +75,7 @@ export default class HfPostModal extends Component {
             type="button"
             class="hf-post-modal__close"
             {{on "click" @onClose}}
-          >✕</button>
+          >{{icon "xmark"}}</button>
         </header>
         <h2 class="hf-post-modal__title">{{this.topic.title}}</h2>
         <HfPostView @postData={{this.postData}} />
