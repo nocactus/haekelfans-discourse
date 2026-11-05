@@ -248,3 +248,15 @@ acceptance("Häkelfans | timeline", function (needs) {
     assert.dom(".hf-post-modal").doesNotExist("modal sluit");
   });
 });
+
+acceptance("Häkelfans | categorieënpagina", function (needs) {
+  needs.user();
+
+  test("/categories toont de standaard categorielijst", async function (assert) {
+    await visit("/categories");
+    assert.dom(".hf-timeline").doesNotExist("geen tijdlijn zonder topiclijst");
+    assert
+      .dom(".category-list, .category-boxes, .categories-and-latest, .category-list-item, .category-box")
+      .exists("categorieën worden getoond");
+  });
+});
