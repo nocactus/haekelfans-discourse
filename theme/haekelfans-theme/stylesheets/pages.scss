@@ -1,0 +1,394 @@
+// Overige pagina's (categorieën, tags, zoeken, profiel/activiteit,
+// meldingen, berichten) in dezelfde kaartstijl als de tijdlijn.
+
+%hf-surface {
+  background: var(--hf-card);
+  border-radius: var(--hf-radius);
+  box-shadow: var(--hf-shadow);
+  border: none;
+}
+
+// Gedeelde typografie op deze pagina's
+body.navigation-categories,
+body.tags-page,
+body.search-page,
+body[class*="user-"][class*="-page"] {
+  #main-outlet {
+    font-size: 15px;
+    line-height: 1.5;
+    color: var(--hf-ink);
+  }
+
+  h1,
+  h2,
+  h3 {
+    color: var(--hf-ink);
+    letter-spacing: -0.2px;
+  }
+}
+
+// Core-navigatiebalk (op pagina's zonder eigen tijdlijn) als filterbalk
+body:not(.hf-timeline-active) .list-controls .navigation-container {
+  @extend %hf-surface;
+  padding: 10px 14px;
+  margin-bottom: 14px;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  box-sizing: border-box;
+  max-width: 100%;
+
+  .nav-pills > li > a {
+    color: var(--hf-ink);
+    font-size: 14px;
+    font-weight: 600;
+    background: none;
+    border-bottom: 2.5px solid transparent;
+    border-radius: 0;
+    padding: 4px 2px;
+    margin-right: 14px;
+
+    &.active,
+    &:hover {
+      color: var(--hf-accent);
+      background: none;
+      border-bottom-color: var(--hf-accent);
+    }
+  }
+
+  .category-breadcrumb .select-kit-header,
+  .category-breadcrumb .combo-box-header {
+    border: 1px solid var(--hf-line);
+    border-radius: 10px;
+    background: var(--hf-card);
+    font-size: 13.5px;
+    font-weight: 600;
+  }
+
+  #create-topic,
+  .btn-primary {
+    background: var(--hf-accent);
+    color: #fff;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 14px;
+
+    .d-icon {
+      color: #fff;
+    }
+  }
+}
+
+// ── Categorieën ──
+body.navigation-categories {
+  .categories-and-latest {
+    gap: 16px;
+
+    > div,
+    .column {
+      @extend %hf-surface;
+      padding: 8px 18px 14px;
+    }
+  }
+
+  table.category-list,
+  .latest-topic-list {
+    border: none;
+
+    th {
+      color: var(--hf-muted);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      border-bottom: 1px solid var(--hf-line);
+    }
+
+    td,
+    .latest-topic-list-item {
+      border-bottom: 1px solid var(--hf-line);
+      border-left: none !important;
+    }
+
+    tr:last-child td,
+    .latest-topic-list-item:last-child {
+      border-bottom: none;
+    }
+
+    .category-name,
+    .category-title-link h3 {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--hf-ink);
+    }
+
+    .category-description {
+      color: var(--hf-muted);
+      font-size: 13.5px;
+    }
+
+    .title {
+      color: var(--hf-ink);
+      font-weight: 600;
+    }
+
+    .topics .value,
+    .topic-stats,
+    .num {
+      color: var(--hf-muted);
+    }
+  }
+
+  .more-topics .btn,
+  .more-topics a {
+    background: var(--hf-accent-soft);
+    color: var(--hf-accent);
+    border-radius: 10px;
+    font-weight: 600;
+  }
+}
+
+// ── Tags ──
+body.tags-page {
+  .tags-index {
+    @extend %hf-surface;
+    padding: 20px;
+
+    h2 {
+      font-size: 22px;
+      margin: 0 0 6px;
+    }
+  }
+
+  .tag-sort-options {
+    color: var(--hf-muted);
+    font-size: 13px;
+
+    a {
+      color: var(--hf-muted);
+      font-weight: 600;
+
+      &:hover,
+      &.active {
+        color: var(--hf-accent);
+      }
+    }
+  }
+
+  .tag-list h3 {
+    color: var(--hf-muted);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--hf-line);
+    padding-bottom: 8px;
+  }
+
+  .tag-box {
+    margin: 4px 8px 4px 0;
+
+    .discourse-tag {
+      background: var(--hf-bubble);
+      color: var(--hf-ink);
+      border-radius: 99px;
+      padding: 4px 12px;
+      font-size: 13.5px;
+
+      &:hover {
+        background: var(--hf-accent-soft);
+        color: var(--hf-accent);
+      }
+    }
+
+    .tag-count {
+      color: var(--hf-muted);
+      font-size: 12px;
+    }
+  }
+}
+
+// ── Zoeken ──
+body.search-page {
+  .search-container {
+    max-width: 760px;
+    margin: 0 auto;
+  }
+
+  .search-header {
+    @extend %hf-surface;
+    padding: 20px;
+    margin-bottom: 14px;
+
+    h1 {
+      font-size: 22px;
+    }
+
+    .search-query,
+    input[type="text"] {
+      border: 1px solid var(--input-border-color);
+      border-radius: 10px;
+      background: var(--hf-bg);
+
+      &:focus {
+        border-color: var(--hf-accent);
+        outline: none;
+      }
+    }
+
+    .btn-primary,
+    .search-cta {
+      background: var(--hf-accent);
+      border-radius: 10px;
+      font-weight: 700;
+    }
+
+    .search-advanced-title,
+    .search-advanced-filters .btn {
+      color: var(--hf-muted);
+      border-radius: 10px;
+    }
+  }
+
+  .search-results {
+    @extend %hf-surface;
+    padding: 6px 20px 14px;
+
+    .fps-result {
+      padding: 14px 0;
+      border-bottom: 1px solid var(--hf-line);
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      .search-link .topic-title {
+        color: var(--hf-accent);
+        font-weight: 700;
+      }
+
+      .blurb {
+        color: var(--hf-ink);
+        font-size: 14px;
+      }
+
+      .search-highlight {
+        background: var(--hf-accent-soft);
+        color: var(--hf-ink);
+      }
+    }
+
+    .no-results-container h3 {
+      font-size: 17px;
+    }
+  }
+}
+
+// ── Profiel: activiteit, meldingen, berichten ──
+body[class*="user-"][class*="-page"] {
+  .user-main {
+    .details {
+      @extend %hf-surface;
+      padding: 18px 20px;
+      margin-bottom: 14px;
+    }
+
+    .user-profile-names .username,
+    .user-profile-names .full-name {
+      color: var(--hf-ink);
+    }
+  }
+
+  .user-navigation {
+    @extend %hf-surface;
+    padding: 4px 10px;
+    margin-bottom: 14px;
+
+    .nav-pills > li > a,
+    .user-nav > li > a {
+      color: var(--hf-ink);
+      font-size: 14px;
+      font-weight: 600;
+      background: none;
+      border-bottom: 2.5px solid transparent;
+      border-radius: 0;
+
+      .d-icon {
+        color: var(--hf-muted);
+      }
+
+      &.active,
+      &:hover {
+        color: var(--hf-accent);
+        background: none;
+        border-bottom-color: var(--hf-accent);
+
+        .d-icon {
+          color: var(--hf-accent);
+        }
+      }
+    }
+  }
+
+  .user-content {
+    @extend %hf-surface;
+    padding: 6px 20px 14px;
+  }
+
+  .user-stream .user-stream-item,
+  .user-notifications-list li,
+  .user-content .topic-list-item {
+    background: none;
+    border-bottom: 1px solid var(--hf-line);
+    padding: 14px 0;
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    .title,
+    .title a,
+    .stream-topic-title a {
+      color: var(--hf-accent);
+      font-weight: 700;
+    }
+
+    .time,
+    .relative-date {
+      color: var(--hf-muted);
+      font-size: 12.5px;
+    }
+
+    .excerpt,
+    .cooked {
+      color: var(--hf-ink);
+      font-size: 14px;
+    }
+  }
+
+  .user-content .topic-list {
+    border: none;
+
+    th {
+      color: var(--hf-muted);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+  }
+
+  .empty-state,
+  .user-content .alert {
+    color: var(--hf-ink);
+
+    .empty-state__title,
+    h3 {
+      font-size: 17px;
+      color: var(--hf-ink);
+    }
+
+    .empty-state__body {
+      color: var(--hf-muted);
+    }
+  }
+}

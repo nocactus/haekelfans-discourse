@@ -2,7 +2,7 @@
   "name": "Häkelfans",
   "component": false,
   "authors": "Timo Roosendaal",
-  "theme_version": "1.1.4",
+  "theme_version": "1.2.0",
   "minimum_discourse_version": "3.4.0",
   "learn_more": "",
   "modifiers": {
