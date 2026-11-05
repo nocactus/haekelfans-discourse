@@ -1,5 +1,16 @@
 en:
   hf:
+    notifications: "Notifications"
+    menu:
+      more: "More options"
+      edit: "Edit"
+      copy_link: "Copy link"
+      link_copied: "Link copied"
+      bookmark: "Bookmark"
+      bookmarked: "Bookmarked"
+      flag: "Flag"
+      delete: "Delete"
+      delete_confirm: "Do you really want to delete this post?"
     filter:
       categories: "Categories"
       tags: "Tags"

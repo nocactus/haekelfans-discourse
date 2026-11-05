@@ -979,3 +979,155 @@
     }
   }
 }
+
+// Achtergrond vastzetten zolang de berichtmodal open is
+html.hf-modal-open,
+html.hf-modal-open body {
+  overflow: hidden;
+}
+
+.hf-post-modal__dialog {
+  overscroll-behavior: contain;
+}
+
+// "⋯"-menu
+.hf-post-view {
+  position: relative;
+
+  &__menu {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: -6px;
+  }
+}
+
+.hf-post-menu {
+  position: relative;
+  display: inline-flex;
+
+  &__toggle {
+    background: none;
+    border: none;
+    padding: 2px 6px;
+    border-radius: 8px;
+    color: var(--hf-muted);
+    cursor: pointer;
+    line-height: 1;
+
+    .d-icon {
+      width: 15px;
+      height: 15px;
+    }
+
+    &:hover,
+    &[aria-expanded="true"] {
+      background: var(--hf-bubble);
+      color: var(--hf-ink);
+    }
+  }
+
+  &__list {
+    position: absolute;
+    right: 0;
+    top: calc(100% + 4px);
+    z-index: 20;
+    min-width: 190px;
+    background: var(--hf-card);
+    border-radius: 12px;
+    box-shadow: 0 8px 28px rgba(22, 44, 45, 0.18);
+    padding: 6px;
+    display: flex;
+    flex-direction: column;
+
+    button {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: none;
+      border: none;
+      text-align: left;
+      padding: 8px 10px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--hf-ink);
+      cursor: pointer;
+      white-space: nowrap;
+
+      .d-icon {
+        width: 14px;
+        height: 14px;
+        color: var(--hf-muted);
+      }
+
+      &:hover {
+        background: var(--hf-bubble);
+      }
+
+      &.is-danger,
+      &.is-danger .d-icon {
+        color: var(--danger, #c62828);
+      }
+    }
+  }
+}
+
+.hf-comment__meta .hf-post-menu__toggle {
+  padding: 0 4px;
+}
+
+// Bel in de header
+.hf-bell__link {
+  position: relative;
+
+  .d-icon {
+    color: var(--hf-ink);
+  }
+}
+
+.hf-bell__badge {
+  position: absolute;
+  top: 2px;
+  right: 0;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 4px;
+  border-radius: 99px;
+  background: var(--hf-accent);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 16px;
+  text-align: center;
+}
+
+// Composer (bewerken), meld-modal, bevestigingsdialoog en toasts boven
+// de berichtmodal tonen.
+html.hf-modal-open {
+  #reply-control {
+    z-index: 9100;
+  }
+
+  .d-modal,
+  .d-modal__backdrop,
+  .modal-backdrop {
+    z-index: 9200;
+  }
+
+  .dialog-container,
+  .dialog-overlay {
+    z-index: 9300;
+  }
+
+  .fk-d-toasts {
+    z-index: 9400;
+  }
+}
+
+// Foto's staan al in de galerij: niet nogmaals in de tekst tonen.
+.hf-post-view__body.has-gallery {
+  .lightbox-wrapper,
+  img:not(.emoji):not(.avatar) {
+    display: none;
+  }
+}

@@ -2,7 +2,7 @@
   "name": "Häkelfans",
   "component": false,
   "authors": "Timo Roosendaal",
-  "theme_version": "1.3.2",
+  "theme_version": "1.4.0",
   "minimum_discourse_version": "3.4.0",
   "learn_more": "",
   "modifiers": {
@@ -21,7 +21,12 @@
       "chevron-left",
       "chevron-right",
       "arrow-left",
-      "paper-plane"
+      "paper-plane",
+      "bell",
+      "ellipsis",
+      "link",
+      "flag",
+      "trash-can"
     ]
   },
   "color_schemes": {

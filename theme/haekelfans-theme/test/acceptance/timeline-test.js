@@ -233,6 +233,31 @@ acceptance("Häkelfans | timeline", function (needs) {
     assert.dom(".hf-composer__collapsed").exists("composer klapt weer dicht");
   });
 
+  test("bel in de header linkt naar meldingen", async function (assert) {
+    await visit("/latest");
+    assert.dom(".hf-bell a").exists("bel aanwezig");
+    assert.dom(".hf-bell a").hasAttribute("href", /\/u\/.+\/notifications/);
+  });
+
+  test("modal blokkeert scrollen en heeft optiemenu", async function (assert) {
+    await visit("/latest");
+    await click(".hf-post-card:nth-of-type(1) .hf-view-all");
+    assert
+      .dom(document.documentElement)
+      .hasClass("hf-modal-open", "achtergrond geblokkeerd");
+    await click(".hf-post-modal .hf-post-view__menu .hf-post-menu__toggle");
+    assert
+      .dom(".hf-post-modal .hf-post-view__menu .hf-post-menu__list button")
+      .exists({ count: 5 }, "staf op andermans bericht: alle 5 opties incl. Melden");
+    assert
+      .dom(".hf-post-modal .hf-comment .hf-post-menu")
+      .exists("menu ook bij reacties");
+    await click(".hf-post-modal__close");
+    assert
+      .dom(document.documentElement)
+      .doesNotHaveClass("hf-modal-open", "scroll weer vrij na sluiten");
+  });
+
   test("berichtmodal toont volledige boom met uitklapbare niveaus", async function (assert) {
     await visit("/latest");
     await click(".hf-post-card:nth-of-type(1) .hf-view-all");

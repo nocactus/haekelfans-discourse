@@ -1,12 +1,14 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
+import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { modifier } from "ember-modifier";
 import { ajax } from "discourse/lib/ajax";
 import { i18n } from "discourse-i18n";
 import HfCommentBox from "./comment-box";
 import HfGallery from "./gallery";
+import HfPostMenu from "./post-menu";
 import HfTreeNode from "./tree-node";
 
 // Volledige weergave van één bericht + reply-boom. Gebruikt in de
@@ -18,8 +20,13 @@ export default class HfPostView extends Component {
   @tracked extraRoots = [];
   @tracked page = 0;
 
+  @service appEvents;
+
   load = modifier(() => {
     this.fetchAll();
+    const refresh = () => this.fetchAll();
+    this.appEvents.on("composer:edited-post", refresh);
+    return () => this.appEvents.off("composer:edited-post", refresh);
   });
 
   get postData() {
@@ -99,8 +106,22 @@ export default class HfPostView extends Component {
 
   <template>
     <div class="hf-post-view" {{this.load}}>
+      {{#if this.postData.first_post_id}}
+        <div class="hf-post-view__menu">
+          <HfPostMenu
+            @postId={{this.postData.first_post_id}}
+            @postNumber={{1}}
+            @topicId={{this.postData.id}}
+            @username={{@authorUsername}}
+            @onDeleted={{@onDeleted}}
+          />
+        </div>
+      {{/if}}
       {{#if this.cookedHtml}}
-        <div class="hf-post-view__body">{{this.cookedHtml}}</div>
+        <div
+          class="hf-post-view__body
+            {{if this.postData.images.length 'has-gallery'}}"
+        >{{this.cookedHtml}}</div>
       {{/if}}
 
       {{#if this.postData.images.length}}

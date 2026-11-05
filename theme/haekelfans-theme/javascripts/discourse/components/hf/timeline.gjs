@@ -43,6 +43,12 @@ export default class HfTimeline extends Component {
     this.openTopic = null;
   }
 
+  @action
+  topicDeleted() {
+    this.openTopic = null;
+    this.router.refresh();
+  }
+
   // De eigen filterbalk vervangt de core-navigatie (anders staan er twee).
   markActive = modifier(() => {
     document.body.classList.add("hf-timeline-active");
@@ -205,7 +211,11 @@ export default class HfTimeline extends Component {
       </aside>
 
       {{#if this.openTopic}}
-        <HfPostModal @topic={{this.openTopic}} @onClose={{this.closeModal}} />
+        <HfPostModal
+          @topic={{this.openTopic}}
+          @onClose={{this.closeModal}}
+          @onDeleted={{this.topicDeleted}}
+        />
       {{/if}}
 
       <button

@@ -12,6 +12,7 @@ export default class HfTreeNode extends Component {
   @tracked expanded = false;
   @tracked replying = false;
   @tracked extraChildren = [];
+  @tracked deleted = false;
 
   get children() {
     return [...(this.args.node.children ?? []), ...this.extraChildren];
@@ -21,6 +22,11 @@ export default class HfTreeNode extends Component {
     return i18n(themePrefix("hf.view_more_answers"), {
       count: this.children.length,
     });
+  }
+
+  @action
+  markDeleted() {
+    this.deleted = true;
   }
 
   @action
@@ -56,8 +62,14 @@ export default class HfTreeNode extends Component {
   }
 
   <template>
+    {{#unless this.deleted}}
     <div class="hf-tree-node">
-      <HfComment @reply={{@node}} @onAnswer={{this.toggleReplying}}>
+      <HfComment
+        @reply={{@node}}
+        @topicId={{@topicId}}
+        @onDeleted={{this.markDeleted}}
+        @onAnswer={{this.toggleReplying}}
+      >
         {{#if this.replying}}
           <HfCommentBox
             @topicId={{@topicId}}
@@ -83,5 +95,6 @@ export default class HfTreeNode extends Component {
         </div>
       {{/if}}
     </div>
+    {{/unless}}
   </template>
 }
