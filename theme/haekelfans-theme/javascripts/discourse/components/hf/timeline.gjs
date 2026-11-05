@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import { htmlSafe } from "@ember/template";
 import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
 import icon from "discourse/helpers/d-icon";
@@ -14,6 +15,7 @@ import HfProfileCard from "./profile-card";
 
 export default class HfTimeline extends Component {
   @service router;
+  @service site;
 
   @tracked openTopic = null;
 
@@ -72,8 +74,26 @@ export default class HfTimeline extends Component {
     return this.args.model?.list;
   }
 
+  get category() {
+    return this.args.model?.category ?? null;
+  }
+
+  get categoryDescription() {
+    const html = this.category?.description;
+    return html ? htmlSafe(html) : null;
+  }
+
+  // "Über die Kategorie"-topics horen niet in de tijdlijn; hun tekst
+  // staat als beschrijving bovenaan de categorie.
+  get aboutTopicIds() {
+    return new Set(
+      (this.site.categories ?? []).map((c) => c.topic_id).filter(Boolean)
+    );
+  }
+
   get topics() {
-    return this.list?.topics ?? [];
+    const hidden = this.aboutTopicIds;
+    return (this.list?.topics ?? []).filter((t) => !hidden.has(t.id));
   }
 
   get currentPath() {
@@ -155,6 +175,15 @@ export default class HfTimeline extends Component {
             {{on "click" this.newTopic}}
           >{{icon "plus"}} {{this.newTopicLabel}}</button>
         </nav>
+
+        {{#if this.category}}
+          <section class="hf-category-intro hf-card">
+            <h1 class="hf-category-intro__name">{{this.category.name}}</h1>
+            {{#if this.categoryDescription}}
+              <div class="hf-category-intro__text">{{this.categoryDescription}}</div>
+            {{/if}}
+          </section>
+        {{/if}}
 
         <HfComposer @onRegister={{this.registerComposer}} />
 
