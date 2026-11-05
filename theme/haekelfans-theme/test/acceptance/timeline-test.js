@@ -1,3 +1,4 @@
+import { getOwner } from "@ember/owner";
 import { click, fillIn, triggerKeyEvent, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
@@ -258,5 +259,36 @@ acceptance("Häkelfans | categorieënpagina", function (needs) {
     assert
       .dom(".category-list, .category-boxes, .categories-and-latest, .category-list-item, .category-box")
       .exists("categorieën worden getoond");
+  });
+});
+
+acceptance("Häkelfans | categorie-tijdlijn", function (needs) {
+  needs.user();
+  needs.pretender((server, helper) => {
+    server.get("/haekelfans/online.json", () =>
+      helper.response({ count: 0, users: [] })
+    );
+    server.get("/u/:username/summary.json", () =>
+      helper.response({ user_summary: { likes_given: 0, likes_received: 0, topic_count: 0, post_count: 0 } })
+    );
+    server.get("/c/bug/1/l/latest.json", () => {
+      const list = hfTopicListResponse();
+      const about = structuredClone(list.topic_list.topics[0]);
+      about.id = 11;
+      about.title = "About the bug category";
+      list.topic_list.topics.unshift(about);
+      return helper.response(list);
+    });
+  });
+
+  test("toont beschrijving bovenaan, zonder over-topic", async function (assert) {
+    const site = getOwner(this).lookup("service:site");
+    site.categories.find((c) => c.id === 1).topic_id = 11;
+    await visit("/c/bug/1");
+    assert.dom(".hf-category-intro").exists("beschrijvingskaart");
+    assert.dom(".hf-category-intro__name").hasText("bug");
+    assert
+      .dom(".hf-post-card__title")
+      .doesNotIncludeText("About the bug category", "over-topic verborgen");
   });
 });

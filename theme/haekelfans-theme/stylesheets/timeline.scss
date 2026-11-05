@@ -973,3 +973,26 @@
     }
   }
 }
+
+.hf-category-intro {
+  &__name {
+    margin: 0 0 6px;
+    font-size: 22px;
+    line-height: 1.25;
+    font-weight: 700;
+    color: var(--hf-accent);
+  }
+
+  &__text {
+    font-size: 15px;
+    color: var(--hf-ink);
+
+    p {
+      margin: 0 0 8px;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+}
