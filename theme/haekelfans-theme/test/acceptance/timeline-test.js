@@ -24,7 +24,8 @@ export function hfTopicListResponse() {
       username: "marga",
       name: "Marga de Boer",
       avatar_template: "/letter_avatar_proxy/v4/letter/m/aaaaaa/{size}.png",
-      excerpt: "Das wird schon toll!",
+      excerpt:
+        'Das wird schon toll! <img src="/images/emoji/twitter/heart_eyes.png" title=":heart_eyes:" class="emoji" alt=":heart_eyes:"> Die sind mega s&uuml;&szlig; &hellip;',
       created_at: "2026-08-01T10:00:00Z",
       like_count: 1,
       current_user_reacted: false,
@@ -133,6 +134,12 @@ acceptance("Häkelfans | timeline", function (needs) {
     const card = ".hf-post-card:nth-of-type(1)";
     assert.dom(`${card} .hf-social__likers`).includesText("Karin");
     assert.dom(`${card} .hf-comment`).exists({ count: 1 });
+    assert
+      .dom(`${card} .hf-comment__text img.emoji`)
+      .exists("emoji in reply-excerpt als afbeelding gerenderd");
+    assert
+      .dom(`${card} .hf-comment__text`)
+      .includesText("mega süß …", "HTML-entities in excerpt gedecodeerd");
     assert.dom(`${card} .hf-comment-box textarea`).exists();
     assert.dom(`${card} .hf-view-all`).includesText("3");
     assert.dom(`${card} .hf-post-card__gallery img`).exists();

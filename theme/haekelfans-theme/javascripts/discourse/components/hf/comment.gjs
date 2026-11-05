@@ -27,7 +27,10 @@ export default class HfComment extends Component {
   }
 
   get bodyHtml() {
-    return this.args.reply.cooked ? htmlSafe(this.args.reply.cooked) : null;
+    // Zowel cooked als excerpt zijn server-side gegenereerde, gesaneerde
+    // HTML (excerpt bevat emoji-afbeeldingen en entities zoals &hellip;).
+    const html = this.args.reply.cooked || this.args.reply.excerpt;
+    return html ? htmlSafe(html) : null;
   }
 
   get avatarSrc() {
@@ -56,8 +59,6 @@ export default class HfComment extends Component {
           <span class="hf-comment__name">{{if @reply.name @reply.name @reply.username}}</span>
           {{#if this.bodyHtml}}
             <div class="hf-comment__text">{{this.bodyHtml}}</div>
-          {{else}}
-            <p class="hf-comment__text">{{@reply.excerpt}}</p>
           {{/if}}
           {{#if this.likeCount}}
             <span class="hf-comment__likepill">♥ {{this.likeCount}}</span>
