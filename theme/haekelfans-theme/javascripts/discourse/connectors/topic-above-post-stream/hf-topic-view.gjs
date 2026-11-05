@@ -34,6 +34,10 @@ export default class HfTopicView extends Component {
     return i18n(themePrefix("hf.modal.back_to_timeline"));
   }
 
+  topicDeleted = () => {
+    this.router.transitionTo("/latest?order=created");
+  };
+
   get highlightPostNumber() {
     const match = this.router.currentURL?.match(/\/t\/[^/]+\/\d+\/(\d+)/);
     return match ? parseInt(match[1], 10) : null;
@@ -71,6 +75,8 @@ export default class HfTopicView extends Component {
           <HfPostView
             @postData={{this.postData}}
             @highlightPostNumber={{this.highlightPostNumber}}
+            @authorUsername={{this.creator.username}}
+            @onDeleted={{this.topicDeleted}}
           />
         </article>
       </div>

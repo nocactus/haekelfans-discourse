@@ -8,6 +8,17 @@ import { hfAvatarUrl, hfTimeAgo } from "../../lib/hf-format";
 import HfPostView from "./post-view";
 
 export default class HfPostModal extends Component {
+  // Achtergrond niet laten meescrollen zolang de modal open is.
+  lockScroll = modifier(() => {
+    document.documentElement.classList.add("hf-modal-open");
+    return () => document.documentElement.classList.remove("hf-modal-open");
+  });
+
+  @action
+  deleted() {
+    this.args.onDeleted?.();
+  }
+
   escape = modifier(() => {
     const handler = (event) => {
       if (event.key === "Escape") {
@@ -63,7 +74,12 @@ export default class HfPostModal extends Component {
 
   <template>
     {{! template-lint-disable no-invalid-interactive }}
-    <div class="hf-post-modal" {{this.escape}} {{on "click" this.backdropClick}}>
+    <div
+      class="hf-post-modal"
+      {{this.escape}}
+      {{this.lockScroll}}
+      {{on "click" this.backdropClick}}
+    >
       <div class="hf-post-modal__dialog hf-card">
         <header class="hf-post-modal__head">
           <img class="hf-post-modal__avatar" src={{this.posterAvatarSrc}} alt="" />
@@ -78,7 +94,11 @@ export default class HfPostModal extends Component {
           >{{icon "xmark"}}</button>
         </header>
         <h2 class="hf-post-modal__title">{{this.topic.title}}</h2>
-        <HfPostView @postData={{this.postData}} />
+        <HfPostView
+          @postData={{this.postData}}
+          @authorUsername={{this.poster.username}}
+          @onDeleted={{this.deleted}}
+        />
       </div>
     </div>
   </template>

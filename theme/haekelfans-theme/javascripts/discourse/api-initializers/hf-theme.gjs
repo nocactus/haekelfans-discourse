@@ -1,8 +1,10 @@
 import { apiInitializer } from "discourse/lib/api";
+import HfHeaderBell from "../components/hf/header-bell";
 import HfNavLinks from "../components/hf/nav-links";
 
 export default apiInitializer((api) => {
   api.renderInOutlet("before-header-panel", HfNavLinks);
+  api.headerIcons.add("hf-bell", HfHeaderBell, { before: "user-menu" });
 
   // PWA: adresbalk/systeem-UI in de warme achtergrondkleur
   const meta = document.createElement("meta");

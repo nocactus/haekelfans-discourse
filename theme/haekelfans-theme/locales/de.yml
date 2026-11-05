@@ -1,5 +1,16 @@
 de:
   hf:
+    notifications: "Benachrichtigungen"
+    menu:
+      more: "Weitere Optionen"
+      edit: "Bearbeiten"
+      copy_link: "Link kopieren"
+      link_copied: "Link kopiert"
+      bookmark: "Lesezeichen setzen"
+      bookmarked: "Lesezeichen gesetzt"
+      flag: "Melden"
+      delete: "Löschen"
+      delete_confirm: "Möchtest du diesen Beitrag wirklich löschen?"
     filter:
       categories: "Kategorien"
       tags: "Schlagwörter"

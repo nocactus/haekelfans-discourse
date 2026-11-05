@@ -8,6 +8,7 @@ import icon from "discourse/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import { hfAvatarUrl, hfTimeAgo } from "../../lib/hf-format";
 import { toggleLike } from "../../lib/hf-like";
+import HfPostMenu from "./post-menu";
 
 export default class HfComment extends Component {
   @tracked likeCount = this.args.reply.like_count ?? 0;
@@ -79,6 +80,15 @@ export default class HfComment extends Component {
             >{{this.answerLabel}}</button>
           {{/if}}
           <span class="hf-comment__time">{{this.timeAgo}}</span>
+          {{#if @topicId}}
+            <HfPostMenu
+              @postId={{@reply.post_id}}
+              @postNumber={{@reply.post_number}}
+              @topicId={{@topicId}}
+              @username={{@reply.username}}
+              @onDeleted={{@onDeleted}}
+            />
+          {{/if}}
         </div>
         {{yield}}
       </div>
