@@ -164,12 +164,12 @@ acceptance("Häkelfans | timeline", function (needs) {
     assert.dom(`${gallery} .hf-gallery__cell`).exists({ count: 5 }, "max 5 tegels");
     assert.dom(`${gallery} .hf-gallery__more`).hasText("+1", "overlay toont rest");
     await click(`${gallery} .hf-gallery__cell:nth-child(1)`);
-    assert.dom(".hf-lightbox").exists("lightbox opent");
-    assert.dom(".hf-lightbox__count").includesText("1 / 6");
+    assert.dom(".hf-lightbox", document.body).exists("lightbox opent");
+    assert.dom(".hf-lightbox__count", document.body).includesText("1 / 6");
     await triggerKeyEvent(document.body, "keydown", "ArrowRight");
-    assert.dom(".hf-lightbox__count").includesText("2 / 6", "pijl navigeert");
+    assert.dom(".hf-lightbox__count", document.body).includesText("2 / 6", "pijl navigeert");
     await triggerKeyEvent(document.body, "keydown", "Escape");
-    assert.dom(".hf-lightbox").doesNotExist("Esc sluit");
+    assert.dom(".hf-lightbox", document.body).doesNotExist("Esc sluit");
   });
 
   test("topic-deeplink rendert kaartweergave", async function (assert) {
@@ -233,10 +233,20 @@ acceptance("Häkelfans | timeline", function (needs) {
     assert.dom(".hf-composer__collapsed").exists("composer klapt weer dicht");
   });
 
-  test("bel in de header linkt naar meldingen", async function (assert) {
+  test("bel opent meldingenmenu, avatar het profielmenu", async function (assert) {
     await visit("/latest");
-    assert.dom(".hf-bell a").exists("bel aanwezig");
-    assert.dom(".hf-bell a").hasAttribute("href", /\/u\/.+\/notifications/);
+    await click(".hf-bell button");
+    assert.dom(".user-menu").exists("menu opent zonder paginawissel");
+    assert
+      .dom(document.documentElement)
+      .hasClass("hf-menu-notifications", "meldingenmodus");
+    await click(".header-dropdown-toggle.current-user button");
+    assert.dom(".user-menu").exists("menu blijft open bij wissel naar profiel");
+    assert
+      .dom(document.documentElement)
+      .hasClass("hf-menu-profile", "profielmodus");
+    await click(".header-dropdown-toggle.current-user button");
+    assert.dom(".user-menu").doesNotExist("tweede klik sluit het menu");
   });
 
   test("modal blokkeert scrollen en heeft optiemenu", async function (assert) {

@@ -35,11 +35,28 @@
   }
 }
 
-// User-menu versimpeling (spec §8): alleen notificaties, berichten,
-// profiel en afmelden blijven over.
-.user-menu.revamped {
-  .top-tabs .btn:not(.user-notifications-tab):not(.user-pms-tab),
-  .bottom-tabs .user-drafts-tab {
+// User-menu gesplitst (zie lib/hf-user-menu.js):
+// bel → meldingen met tabs, avatar → alleen het profielpaneel.
+html.hf-menu-notifications .user-menu.revamped {
+  .bottom-tabs {
     display: none;
   }
+
+  .panel-body {
+    min-height: 340px; // alle meldingentabs blijven zichtbaar
+  }
+}
+
+html.hf-menu-profile .user-menu.revamped {
+  .menu-tabs-container {
+    display: none;
+  }
+
+  .quick-access-panel {
+    border-right: none;
+  }
+}
+
+.user-menu.revamped .bottom-tabs .user-drafts-tab {
+  display: none;
 }

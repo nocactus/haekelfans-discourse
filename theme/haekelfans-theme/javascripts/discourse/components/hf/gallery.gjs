@@ -30,6 +30,12 @@ export default class HfGallery extends Component {
     return `m${Math.min(this.images.length, MAX_TILES)}`;
   }
 
+  // Lightbox buiten de kaart renderen: kaarten gebruiken
+  // content-visibility, waardoor position:fixed anders binnen de kaart blijft.
+  get portalTarget() {
+    return document.body;
+  }
+
   @action
   open(index) {
     this.lightboxAt = index;
@@ -63,12 +69,14 @@ export default class HfGallery extends Component {
         {{/each}}
       </div>
       {{#if (isPresent this.lightboxAt)}}
-        <HfLightbox
-          @images={{this.images}}
-          @startIndex={{this.lightboxAt}}
-          @title={{@title}}
-          @onClose={{this.closeLightbox}}
-        />
+        {{#in-element this.portalTarget insertBefore=null}}
+          <HfLightbox
+            @images={{this.images}}
+            @startIndex={{this.lightboxAt}}
+            @title={{@title}}
+            @onClose={{this.closeLightbox}}
+          />
+        {{/in-element}}
       {{/if}}
     {{/if}}
   </template>

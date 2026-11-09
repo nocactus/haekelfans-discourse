@@ -1,10 +1,29 @@
 import { apiInitializer } from "discourse/lib/api";
 import HfHeaderBell from "../components/hf/header-bell";
 import HfNavLinks from "../components/hf/nav-links";
+import { toggleUserMenu } from "../lib/hf-user-menu";
 
 export default apiInitializer((api) => {
   api.renderInOutlet("before-header-panel", HfNavLinks);
   api.headerIcons.add("hf-bell", HfHeaderBell, { before: "user-menu" });
+
+  // Avatar opent het profielmenu (de bel opent de meldingen).
+  const header = api.container.lookup("service:header");
+  if (window.__hfAvatarHandler) {
+    document.removeEventListener("click", window.__hfAvatarHandler, true);
+  }
+  window.__hfAvatarHandler = (event) => {
+    const avatar = event.target.closest?.(
+      ".header-dropdown-toggle.current-user button, #toggle-current-user"
+    );
+    if (!avatar) {
+      return;
+    }
+    event.preventDefault();
+    event.stopPropagation();
+    toggleUserMenu(header, "profile");
+  };
+  document.addEventListener("click", window.__hfAvatarHandler, true);
 
   // PWA: adresbalk/systeem-UI in de warme achtergrondkleur
   const meta = document.createElement("meta");
