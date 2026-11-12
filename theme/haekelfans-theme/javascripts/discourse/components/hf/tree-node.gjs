@@ -6,10 +6,10 @@ import { i18n } from "discourse-i18n";
 import HfComment from "./comment";
 import HfCommentBox from "./comment-box";
 
-// Recursieve knoop in de reply-boom. Niveau 1 is zichtbaar; diepere
-// niveaus zitten ingeklapt achter "N weitere Antworten ansehen".
+// Recursieve knoop in de reply-boom. Alle niveaus staan standaard open
+// (leden verwachten bij "Alle N Reaktionen ansehen" ook echt alles te zien).
 export default class HfTreeNode extends Component {
-  @tracked expanded = false;
+  @tracked expanded = true;
   @tracked replying = false;
   @tracked extraChildren = [];
   @tracked deleted = false;
