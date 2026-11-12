@@ -8,6 +8,7 @@ import icon from "discourse/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import { hfAvatarUrl, hfTimeAgo } from "../../lib/hf-format";
 import { toggleLike } from "../../lib/hf-like";
+import HfGallery from "./gallery";
 import HfPostMenu from "./post-menu";
 
 export default class HfComment extends Component {
@@ -61,6 +62,11 @@ export default class HfComment extends Component {
           <span class="hf-comment__name">{{if @reply.name @reply.name @reply.username}}</span>
           {{#if this.bodyHtml}}
             <div class="hf-comment__text">{{this.bodyHtml}}</div>
+          {{/if}}
+          {{#if @reply.images.length}}
+            <div class="hf-comment__photos">
+              <HfGallery @images={{@reply.images}} />
+            </div>
           {{/if}}
           {{#if this.likeCount}}
             <span class="hf-comment__likepill">{{icon "heart"}} {{this.likeCount}}</span>

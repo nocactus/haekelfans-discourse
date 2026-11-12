@@ -48,6 +48,28 @@ RSpec.describe HaekelfansTimeline::TimelineData do
       expect(described_class.reply_total_for(topic)).to eq(3)
     end
 
+    it "levert foto's van een reply apart en haalt de naamlinks uit de excerpt" do
+      upload3 = Fabricate(:image_upload, width: 800, height: 1000)
+      reply =
+        Fabricate(
+          :post,
+          topic: topic,
+          post_number: 2,
+          raw: "Hier die Ohren",
+          cooked:
+            "<p>Hier die Ohren</p><div class=\"lightbox-wrapper\"><a class=\"lightbox\" href=\"#{upload3.url}\">" \
+              "<img src=\"#{upload3.url}\" alt=\"IMG_1234\"></a></div>",
+        )
+      UploadReference.create!(target: reply, upload: upload3)
+      described_class.preload([topic])
+      r = described_class.replies_for(topic).first
+      expect(r[:images].length).to eq(1)
+      expect(r[:images].first[:url]).to eq(UrlHelper.cook_url(upload3.url))
+      expect(r[:images].first[:height]).to eq(1000)
+      expect(r[:excerpt]).to include("Hier die Ohren")
+      expect(r[:excerpt]).not_to include("IMG_1234")
+    end
+
     it "slaat verwijderde posts over" do
       p2 = Fabricate(:post, topic: topic, post_number: 2)
       p2.trash!
