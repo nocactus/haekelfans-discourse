@@ -274,18 +274,16 @@ acceptance("Häkelfans | timeline", function (needs) {
       .doesNotHaveClass("hf-modal-open", "scroll weer vrij na sluiten");
   });
 
-  test("berichtmodal toont volledige boom met uitklapbare niveaus", async function (assert) {
+  test("berichtmodal toont direct alle reacties, ook geneste", async function (assert) {
     await visit("/latest");
     await click(".hf-post-card:nth-of-type(1) .hf-view-all");
     assert.dom(".hf-post-modal").exists("modal opent");
-    assert.dom(".hf-post-modal .hf-comment").exists({ count: 1 }, "niveau 1 zichtbaar");
-    assert
-      .dom(".hf-post-modal .hf-tree-node__more")
-      .includesText("1", "toggle voor 1 antwoord");
-    await click(".hf-post-modal .hf-tree-node__more");
     assert
       .dom(".hf-post-modal .hf-comment")
-      .exists({ count: 2 }, "niveau 2 uitgeklapt");
+      .exists({ count: 2 }, "niveau 1 en 2 direct zichtbaar");
+    assert
+      .dom(".hf-post-modal .hf-tree-node__more")
+      .doesNotExist("niets ingeklapt");
     await click(".hf-post-modal__close");
     assert.dom(".hf-post-modal").doesNotExist("modal sluit");
   });
