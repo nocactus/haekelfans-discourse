@@ -76,6 +76,7 @@ module HaekelfansTimeline
         ) x WHERE rn <= :n
       SQL
       users = User.where(id: rows.map(&:user_id).uniq).index_by(&:id)
+      images_by_post = images_for_posts(rows.map(&:id))
       rows
         .group_by(&:topic_id)
         .each do |tid, list|
@@ -90,7 +91,8 @@ module HaekelfansTimeline
                 username: u&.username,
                 name: u&.name,
                 avatar_template: u&.avatar_template,
-                excerpt: PrettyText.excerpt(r.cooked, 200, keep_emoji_images: true),
+                excerpt: reply_excerpt(r.cooked),
+                images: images_by_post[r.id] || [],
                 created_at: r.created_at,
                 like_count: r.like_count,
                 current_user_reacted: false,
@@ -101,9 +103,16 @@ module HaekelfansTimeline
     end
 
     def self.preload_images(topics, first_posts)
+      by_post = images_for_posts(first_posts.values)
+      topics.each { |t| merge_hf_data(t, images: by_post[first_posts[t.id]] || []) }
+    end
+
+    # Foto's (met thumbnail) per post-id, in uploadvolgorde, gemaximeerd.
+    def self.images_for_posts(post_ids)
+      return {} if post_ids.empty?
       refs =
         UploadReference
-          .where(target_type: "Post", target_id: first_posts.values)
+          .where(target_type: "Post", target_id: post_ids)
           .joins("JOIN uploads ON uploads.id = upload_references.upload_id")
           .where("uploads.width IS NOT NULL")
           .order(:target_id, :id)
@@ -119,23 +128,32 @@ module HaekelfansTimeline
           .where(upload_id: refs.map { |r| r[1] })
           .order(width: :desc)
           .group_by(&:upload_id)
-      by_post = refs.group_by(&:first)
       limit = SiteSetting.haekelfans_timeline_max_images
 
-      topics.each do |t|
-        rows = (by_post[first_posts[t.id]] || []).first(limit)
-        images =
-          rows.map do |(_pid, upload_id, url, w, h)|
-            thumb = thumbs[upload_id]&.first
-            {
-              url: UrlHelper.cook_url(url),
-              thumb_url: UrlHelper.cook_url(thumb ? thumb.url : url),
-              width: w,
-              height: h,
-            }
-          end
-        merge_hf_data(t, images: images)
-      end
+      refs
+        .group_by(&:first)
+        .transform_values do |rows|
+          rows
+            .first(limit)
+            .map do |(_pid, upload_id, url, w, h)|
+              thumb = thumbs[upload_id]&.first
+              {
+                url: UrlHelper.cook_url(url),
+                thumb_url: UrlHelper.cook_url(thumb ? thumb.url : url),
+                width: w,
+                height: h,
+              }
+            end
+        end
+    end
+
+    # Excerpt zonder foto's: die komen apart mee als images, anders
+    # verschijnen ze als "[bestandsnaam]"-links in de tekst.
+    def self.reply_excerpt(cooked)
+      doc = Nokogiri::HTML5.fragment(cooked.to_s)
+      doc.css(".lightbox-wrapper").each(&:remove)
+      doc.css("img").each { |img| img.remove unless img["class"].to_s.include?("emoji") }
+      PrettyText.excerpt(doc.to_html, 200, keep_emoji_images: true)
     end
 
     def self.hf_data(topic)

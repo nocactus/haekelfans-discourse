@@ -1131,3 +1131,18 @@ html.hf-modal-open {
     display: none;
   }
 }
+
+// Foto's in een reactie (tijdlijnkaart): compacte galerij in de bubbel
+.hf-comment__photos {
+  margin: 6px 0 2px;
+  width: 320px;
+  max-width: 100%;
+
+  .hf-gallery {
+    border-radius: 10px;
+  }
+
+  .hf-gallery.m1 .hf-gallery__cell img {
+    max-height: 360px;
+  }
+}

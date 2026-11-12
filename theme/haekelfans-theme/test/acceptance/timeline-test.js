@@ -26,6 +26,9 @@ export function hfTopicListResponse() {
       username: "marga",
       name: "Marga de Boer",
       avatar_template: "/letter_avatar_proxy/v4/letter/m/aaaaaa/{size}.png",
+      images: [
+        { url: "/images/r1.jpg", thumb_url: "/images/r1.jpg", width: 800, height: 1000 },
+      ],
       excerpt:
         'Das wird schon toll! <img src="/images/emoji/twitter/heart_eyes.png" title=":heart_eyes:" class="emoji" alt=":heart_eyes:"> Die sind mega s&uuml;&szlig; &hellip;',
       created_at: "2026-08-01T10:00:00Z",
@@ -137,6 +140,9 @@ acceptance("Häkelfans | timeline", function (needs) {
     assert.dom(`${card} .hf-social__likers`).includesText("Karin");
     assert.dom(`${card} .hf-comment`).exists({ count: 1 });
     assert
+      .dom(`${card} .hf-comment__photos .hf-gallery__cell img`)
+      .exists("foto van de reactie zichtbaar");
+    assert
       .dom(`${card} .hf-comment__text img.emoji`)
       .exists("emoji in reply-excerpt als afbeelding gerenderd");
     assert
@@ -160,7 +166,7 @@ acceptance("Häkelfans | timeline", function (needs) {
 
   test("masonry-galerij met +N-overlay en lightbox", async function (assert) {
     await visit("/latest");
-    const gallery = ".hf-post-card:nth-of-type(1) .hf-gallery";
+    const gallery = ".hf-post-card:nth-of-type(1) .hf-post-card__gallery .hf-gallery";
     assert.dom(`${gallery} .hf-gallery__cell`).exists({ count: 5 }, "max 5 tegels");
     assert.dom(`${gallery} .hf-gallery__more`).hasText("+1", "overlay toont rest");
     await click(`${gallery} .hf-gallery__cell:nth-child(1)`);
