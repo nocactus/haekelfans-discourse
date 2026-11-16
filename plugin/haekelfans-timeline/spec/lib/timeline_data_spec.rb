@@ -21,6 +21,19 @@ RSpec.describe HaekelfansTimeline::TimelineData do
       expect(images.first[:width]).to eq(1200)
     end
 
+    it "laat afbeeldingen uit link-previews en citaten weg" do
+      icon = Fabricate(:image_upload, width: 32, height: 32)
+      UploadReference.create!(target: post1, upload: icon)
+      post1.update_columns(
+        cooked:
+          %{<p>Tekst</p><aside class="onebox"><img src="#{icon.url}" class="site-icon"></aside>},
+      )
+      described_class.preload([topic])
+      urls = described_class.images_for(topic).map { |i| i[:url] }
+      expect(urls).not_to include(UrlHelper.cook_url(icon.url))
+      expect(urls.length).to eq(2)
+    end
+
     it "respecteert het maximum" do
       SiteSetting.haekelfans_timeline_max_images = 1
       described_class.preload([topic])
