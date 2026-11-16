@@ -8,6 +8,7 @@ export function hfTopicListResponse() {
   const list = structuredClone(topicFixtures["/latest.json"]);
   const t = list.topic_list.topics[0];
   t.title = "Decke gehäkelt";
+  t.excerpt = "Meine neue Decke ist fertig";
   t.hf_first_post_id = 101;
   t.hf_images = [1, 2, 3, 4, 5, 6].map((n) => ({
     url: `/images/d${n}.jpg`,
@@ -279,6 +280,13 @@ acceptance("Häkelfans | timeline", function (needs) {
     assert
       .dom(document.documentElement)
       .doesNotHaveClass("hf-modal-open", "scroll weer vrij na sluiten");
+  });
+
+  test("tekst van kaart met galerij verbergt dubbele foto's", async function (assert) {
+    await visit("/latest");
+    assert
+      .dom(".hf-post-card:nth-of-type(1) .hf-post-card__text")
+      .hasClass("has-gallery", "foto's staan al in de galerij");
   });
 
   test("tijdlijnkaart heeft zelf een optiemenu", async function (assert) {
