@@ -70,6 +70,17 @@ RSpec.describe HaekelfansTimeline::TimelineData do
       expect(r[:excerpt]).not_to include("IMG_1234")
     end
 
+    it "levert de naam van degene op wie een reply reageert" do
+      parent_user = Fabricate(:user, name: "Manuela Seydler")
+      parent = Fabricate(:post, topic: topic, post_number: 2, user: parent_user)
+      child = Fabricate(:post, topic: topic, post_number: 3, reply_to_post_number: 2)
+      child.update_columns(reply_to_user_id: parent_user.id)
+      described_class.preload([topic])
+      replies = described_class.replies_for(topic)
+      expect(replies.find { |r| r[:post_number] == 3 }[:reply_to_name]).to eq("Manuela Seydler")
+      expect(replies.find { |r| r[:post_number] == 2 }[:reply_to_name]).to be_nil
+    end
+
     it "slaat verwijderde posts over" do
       p2 = Fabricate(:post, topic: topic, post_number: 2)
       p2.trash!

@@ -22,7 +22,8 @@ export function hfTopicListResponse() {
     {
       post_id: 11,
       post_number: 3,
-      reply_to_post_number: null,
+      reply_to_post_number: 2,
+      reply_to_name: "Ramona Klein",
       username: "marga",
       name: "Marga de Boer",
       avatar_template: "/letter_avatar_proxy/v4/letter/m/aaaaaa/{size}.png",
@@ -139,6 +140,13 @@ acceptance("Häkelfans | timeline", function (needs) {
     const card = ".hf-post-card:nth-of-type(1)";
     assert.dom(`${card} .hf-social__likers`).includesText("Karin");
     assert.dom(`${card} .hf-comment`).exists({ count: 1 });
+    assert
+      .dom(`${card} .hf-comment__replyto`)
+      .includesText("Ramona Klein", "toont op wie gereageerd wordt");
+    await click(`${card} .hf-comment__answer`);
+    assert
+      .dom(`${card} .hf-comment .hf-comment-box`)
+      .exists("antwoordveld direct onder de reactie");
     assert
       .dom(`${card} .hf-comment__photos .hf-gallery__cell img`)
       .exists("foto van de reactie zichtbaar");

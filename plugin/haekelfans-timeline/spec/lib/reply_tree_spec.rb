@@ -22,6 +22,17 @@ RSpec.describe HaekelfansTimeline::ReplyTree do
     expect(l4.flat_map { |node| node[:children] }).to eq([])
   end
 
+  it "levert de naam van degene op wie gereageerd wordt" do
+    parent = reply(to: nil, n: 2)
+    parent.user.update!(name: "Manuela Seydler")
+    child = reply(to: 2, n: 3)
+    child.update_columns(reply_to_user_id: parent.user_id)
+    tree = described_class.build(topic.reload, Guardian.new)
+    node = tree[:replies].first[:children].first
+    expect(node[:reply_to_name]).to eq("Manuela Seydler")
+    expect(tree[:replies].first[:reply_to_name]).to be_nil
+  end
+
   it "pagineert top-level replies" do
     reply(to: nil, n: 2)
     reply(to: nil, n: 3)

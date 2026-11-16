@@ -47,6 +47,7 @@ export default class HfTreeNode extends Component {
         post_id: post.id,
         post_number: post.post_number,
         reply_to_post_number: post.reply_to_post_number,
+        reply_to_name: post.reply_to_user?.name || post.reply_to_user?.username,
         username: post.username,
         name: post.name,
         avatar_template: post.avatar_template,
@@ -66,6 +67,7 @@ export default class HfTreeNode extends Component {
     <div class="hf-tree-node">
       <HfComment
         @reply={{@node}}
+        @parentPostNumber={{@parentPostNumber}}
         @topicId={{@topicId}}
         @onDeleted={{this.markDeleted}}
         @onAnswer={{this.toggleReplying}}
@@ -83,7 +85,11 @@ export default class HfTreeNode extends Component {
         <div class="hf-tree-node__children">
           {{#if this.expanded}}
             {{#each this.children as |child|}}
-              <HfTreeNode @node={{child}} @topicId={{@topicId}} />
+              <HfTreeNode
+                @node={{child}}
+                @parentPostNumber={{@node.post_number}}
+                @topicId={{@topicId}}
+              />
             {{/each}}
           {{else}}
             <button

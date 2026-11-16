@@ -15,7 +15,7 @@ module HaekelfansTimeline
           .posts
           .where("post_number > 1")
           .where(deleted_at: nil, post_type: Post.types[:regular], hidden: false)
-          .includes(:user)
+          .includes(:user, :reply_to_user)
           .order(:post_number)
       liked_ids = liked_post_ids(current_user, posts)
       nodes = posts.map { |p| serialize(p, liked_ids) }
@@ -69,6 +69,7 @@ module HaekelfansTimeline
         post_id: post.id,
         post_number: post.post_number,
         reply_to_post_number: post.reply_to_post_number,
+        reply_to_name: TimelineData.reply_to_name(post.reply_to_post_number, post.reply_to_user),
         username: u&.username,
         name: u&.name,
         avatar_template: u&.avatar_template,

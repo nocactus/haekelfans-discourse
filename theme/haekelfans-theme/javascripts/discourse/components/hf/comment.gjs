@@ -44,6 +44,15 @@ export default class HfComment extends Component {
     return hfTimeAgo(this.args.reply.created_at);
   }
 
+  // "↩ Naam" alleen tonen als de relatie niet al zichtbaar is door nesting.
+  get replyToName() {
+    const r = this.args.reply;
+    if (!r.reply_to_name || r.reply_to_post_number === this.args.parentPostNumber) {
+      return null;
+    }
+    return r.reply_to_name;
+  }
+
   get likeLabel() {
     return i18n(themePrefix("hf.like"));
   }
@@ -60,6 +69,9 @@ export default class HfComment extends Component {
       <div class="hf-comment__body">
         <div class="hf-comment__bubble">
           <span class="hf-comment__name">{{if @reply.name @reply.name @reply.username}}</span>
+          {{#if this.replyToName}}
+            <span class="hf-comment__replyto">{{icon "reply"}} {{this.replyToName}}</span>
+          {{/if}}
           {{#if this.bodyHtml}}
             <div class="hf-comment__text">{{this.bodyHtml}}</div>
           {{/if}}

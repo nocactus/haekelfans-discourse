@@ -66,7 +66,7 @@ module HaekelfansTimeline
       n = SiteSetting.haekelfans_timeline_reply_preview_count
       rows = DB.query(<<~SQL, ids: ids, n: n)
         SELECT * FROM (
-          SELECT p.id, p.topic_id, p.post_number, p.reply_to_post_number, p.user_id,
+          SELECT p.id, p.topic_id, p.post_number, p.reply_to_post_number, p.user_id, p.reply_to_user_id,
                  p.cooked, p.created_at, p.like_count,
                  ROW_NUMBER() OVER (PARTITION BY p.topic_id ORDER BY p.post_number DESC) AS rn,
                  COUNT(*)    OVER (PARTITION BY p.topic_id) AS total
@@ -75,7 +75,7 @@ module HaekelfansTimeline
             AND p.deleted_at IS NULL AND p.post_type = 1 AND p.hidden = false
         ) x WHERE rn <= :n
       SQL
-      users = User.where(id: rows.map(&:user_id).uniq).index_by(&:id)
+      users = User.where(id: (rows.map(&:user_id) + rows.map(&:reply_to_user_id)).compact.uniq).index_by(&:id)
       images_by_post = images_for_posts(rows.map(&:id))
       rows
         .group_by(&:topic_id)
@@ -88,6 +88,7 @@ module HaekelfansTimeline
                 post_id: r.id,
                 post_number: r.post_number,
                 reply_to_post_number: r.reply_to_post_number,
+                reply_to_name: reply_to_name(r.reply_to_post_number, users[r.reply_to_user_id]),
                 username: u&.username,
                 name: u&.name,
                 avatar_template: u&.avatar_template,
@@ -145,6 +146,13 @@ module HaekelfansTimeline
               }
             end
         end
+    end
+
+    # Naam van degene op wie gereageerd wordt; niet bij reacties op het
+    # hoofdbericht (post 1) of zonder bekende ontvanger.
+    def self.reply_to_name(reply_to_post_number, user)
+      return nil if user.nil? || reply_to_post_number.nil? || reply_to_post_number == 1
+      user.name.presence || user.username
     end
 
     # Excerpt zonder foto's: die komen apart mee als images, anders
