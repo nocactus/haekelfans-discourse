@@ -1167,3 +1167,48 @@ html.hf-modal-open {
 .hf-comment .hf-comment-box {
   margin-top: 8px;
 }
+
+// Link bewerken in de composer: geen donkere overlay over de pagina.
+.upsert-hyperlink-modal + .d-modal__backdrop {
+  background-color: transparent;
+}
+
+// Schakelaar "Link-Vorschau" naast de opslaan-knop van de composer.
+.hf-link-preview-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: 12px;
+  font-size: 14px;
+  color: var(--hf-muted);
+  cursor: pointer;
+  white-space: nowrap;
+
+  input {
+    margin: 0;
+    accent-color: var(--hf-accent);
+  }
+}
+
+// Link-preview uit: in voorbeeld en rich editor alleen de URL tonen.
+html.hf-no-link-preview #reply-control {
+  .d-editor-preview aside.onebox[data-onebox-src],
+  .ProseMirror .onebox-wrapper[data-onebox-src] {
+    border: 0;
+    padding: 0;
+    margin: 0 0 1em;
+    box-shadow: none;
+    background: none;
+
+    > * {
+      display: none;
+    }
+
+    &::before {
+      content: attr(data-onebox-src);
+      color: var(--hf-accent);
+      text-decoration: underline;
+      word-break: break-all;
+    }
+  }
+}

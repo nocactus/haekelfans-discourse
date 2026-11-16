@@ -21,7 +21,7 @@ export default class HfComposer extends Component {
   @tracked expanded = false;
   @tracked title = "";
   @tracked raw = "";
-  @tracked linkPreview = true;
+  @tracked linkPreview = false;
   @tracked categoryId = null;
   @tracked tagsInput = "";
   @tracked uploads = [];
@@ -216,7 +216,7 @@ export default class HfComposer extends Component {
       this.title = "";
       this.tagsInput = "";
       this.uploads = [];
-      this.linkPreview = true;
+      this.linkPreview = false;
       this.expanded = false;
       await ajax(`/drafts/${DRAFT_KEY}.json?sequence=${this.draftSequence}`, {
         type: "DELETE",

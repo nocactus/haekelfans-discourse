@@ -48,6 +48,7 @@ export default class HfCommentBox extends Component {
           topic_id: this.args.topicId,
           raw,
           reply_to_post_number: this.args.replyToPostNumber ?? undefined,
+          hf_no_onebox: "true",
         },
       });
       this.value = "";

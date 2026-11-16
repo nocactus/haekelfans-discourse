@@ -42,4 +42,31 @@ RSpec.describe "hf_no_onebox" do
     DiscourseEvent.trigger(:post_process_cooked, doc, post.reload)
     expect(doc.to_html).to include("onebox")
   end
+
+  describe "bij bewerken" do
+    fab!(:post) { Fabricate(:post, user: user, raw: "Kijk https://haekelfans.de eens") }
+
+    it "zet de vlag en rendert opnieuw zonder tekstwijziging" do
+      sign_in(user)
+      put "/posts/#{post.id}.json", params: { post: { raw: post.raw, hf_no_onebox: "true" } }
+      expect(response.status).to eq(200)
+      expect(post.reload.custom_fields["hf_no_onebox"]).to eq(true)
+    end
+
+    it "haalt de vlag weg" do
+      post.custom_fields["hf_no_onebox"] = true
+      post.save_custom_fields
+      sign_in(user)
+      put "/posts/#{post.id}.json", params: { post: { raw: post.raw, hf_no_onebox: "false" } }
+      expect(post.reload.custom_fields["hf_no_onebox"]).to be_nil
+    end
+
+    it "toont de vlag in de post-serializer" do
+      post.custom_fields["hf_no_onebox"] = true
+      post.save_custom_fields
+      sign_in(user)
+      get "/posts/#{post.id}.json"
+      expect(response.parsed_body["hf_no_onebox"]).to eq(true)
+    end
+  end
 end

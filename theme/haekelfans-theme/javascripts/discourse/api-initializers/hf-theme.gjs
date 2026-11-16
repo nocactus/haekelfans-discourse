@@ -7,6 +7,19 @@ export default apiInitializer((api) => {
   api.renderInOutlet("before-header-panel", HfNavLinks);
   api.headerIcons.add("hf-bell", HfHeaderBell, { before: "user-menu" });
 
+  // Link-preview (onebox) standaard uit; bij bewerken de huidige stand van het bericht.
+  api.serializeOnCreate("hf_no_onebox");
+  api.serializeOnUpdate("hf_no_onebox");
+  api.serializeToDraft("hf_no_onebox");
+  api.onAppEvent("composer:open", ({ model }) => {
+    if (!model || model.hf_no_onebox !== undefined) {
+      return;
+    }
+    const post = model.post;
+    const off = post ? !!post.hf_no_onebox : true;
+    model.set("hf_no_onebox", off ? "true" : "false");
+  });
+
   // Avatar opent het profielmenu (de bel opent de meldingen).
   const header = api.container.lookup("service:header");
   if (window.__hfAvatarHandler) {

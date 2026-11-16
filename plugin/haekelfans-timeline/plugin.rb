@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 # name: haekelfans-timeline
 # about: Tijdlijn-data voor het Häkelfans theme (afbeeldingen, replies, online, no-onebox)
-# version: 1.0.0
+# version: 1.1.0
 # authors: Timo Roosendaal
 # required_version: 2.7.0
 
@@ -9,6 +9,10 @@ enabled_site_setting :haekelfans_timeline_enabled
 
 module ::HaekelfansTimeline
   PLUGIN_NAME = "haekelfans-timeline"
+
+  def self.no_onebox?(value)
+    [true, "true", "t"].include?(value)
+  end
 end
 
 require_relative "lib/haekelfans_timeline/engine"
@@ -88,8 +92,30 @@ after_initialize do
     end
   end
 
+  # Bij bewerken kan de schakelaar ook wijzigen; zonder tekstwijziging
+  # moet het bericht dan opnieuw gerenderd worden.
+  add_permitted_post_update_param(:hf_no_onebox) do |post, value|
+    wanted = value.to_s == "true"
+    current = HaekelfansTimeline.no_onebox?(post.custom_fields["hf_no_onebox"])
+    next if wanted == current
+
+    if wanted
+      post.custom_fields["hf_no_onebox"] = true
+    else
+      post.custom_fields.delete("hf_no_onebox")
+    end
+    post.save_custom_fields(true)
+    post.rebake!
+  end
+
+  topic_view_post_custom_fields_allowlister { ["hf_no_onebox"] }
+
+  add_to_serializer(:post, :hf_no_onebox) do
+    HaekelfansTimeline.no_onebox?(post_custom_fields["hf_no_onebox"])
+  end
+
   on(:post_process_cooked) do |doc, post|
-    if post.custom_fields["hf_no_onebox"]
+    if HaekelfansTimeline.no_onebox?(post.custom_fields["hf_no_onebox"])
       doc
         .css("aside.onebox")
         .each do |node|
