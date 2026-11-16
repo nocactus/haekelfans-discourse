@@ -204,7 +204,11 @@ export default class HfPostCard extends Component {
       </h2>
 
       {{#if this.excerptHtml}}
-        <div class="hf-post-card__text {{if this.expanded 'is-expanded'}}">
+        <div
+          class="hf-post-card__text
+            {{if this.expanded 'is-expanded'}}
+            {{if this.images.length 'has-gallery'}}"
+        >
           {{this.excerptHtml}}
           {{#unless this.expanded}}
             {{#if @topic.excerptTruncated}}

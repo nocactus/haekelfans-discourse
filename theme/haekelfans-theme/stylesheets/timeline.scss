@@ -1114,9 +1114,18 @@ html.hf-modal-open {
     z-index: 9200;
   }
 
-  .dialog-container,
-  .dialog-overlay {
+  .dialog-container {
     z-index: 9300;
+  }
+
+  // De berichtmodal dimt de pagina al; geen tweede donkere laag.
+  .dialog-overlay {
+    background: transparent;
+  }
+
+  .dialog-content {
+    border-radius: 14px;
+    box-shadow: 0 12px 48px rgb(0 0 0 / 0.28);
   }
 
   .fk-d-toasts {
@@ -1125,9 +1134,11 @@ html.hf-modal-open {
 }
 
 // Foto's staan al in de galerij: niet nogmaals in de tekst tonen.
-.hf-post-view__body.has-gallery {
+// (ook in een uitgeklapte tijdlijnkaart; previews en citaten blijven heel)
+.hf-post-view__body.has-gallery,
+.hf-post-card__text.has-gallery {
   .lightbox-wrapper,
-  img:not(.emoji):not(.avatar) {
+  img:not(.emoji, .avatar, aside img) {
     display: none;
   }
 }
