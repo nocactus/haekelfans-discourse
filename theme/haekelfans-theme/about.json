@@ -2,10 +2,11 @@
   "name": "Häkelfans",
   "component": false,
   "authors": "Timo Roosendaal",
-  "theme_version": "1.5.0",
+  "theme_version": "1.5.1",
   "minimum_discourse_version": "3.4.0",
   "learn_more": "",
   "modifiers": {
+    "serialize_topic_excerpts": true,
     "svg_icons": [
       "camera",
       "heart",
