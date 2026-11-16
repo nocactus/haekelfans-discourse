@@ -281,6 +281,14 @@ acceptance("Häkelfans | timeline", function (needs) {
       .doesNotHaveClass("hf-modal-open", "scroll weer vrij na sluiten");
   });
 
+  test("tijdlijnkaart heeft zelf een optiemenu", async function (assert) {
+    await visit("/latest");
+    await click(".hf-post-card:nth-of-type(1) .hf-post-card__menu .hf-post-menu__toggle");
+    assert
+      .dom(".hf-post-card:nth-of-type(1) .hf-post-card__menu .hf-post-menu__list button")
+      .exists({ count: 5 }, "bewerken, link, bladwijzer, melden, verwijderen");
+  });
+
   test("berichtmodal toont direct alle reacties, ook geneste", async function (assert) {
     await visit("/latest");
     await click(".hf-post-card:nth-of-type(1) .hf-view-all");
