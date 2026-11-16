@@ -1146,3 +1146,24 @@ html.hf-modal-open {
     max-height: 360px;
   }
 }
+
+// "↩ Naam": op wie een reactie antwoordt
+.hf-comment__replyto {
+  margin-left: 6px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--hf-muted);
+  white-space: nowrap;
+
+  .d-icon {
+    width: 11px;
+    height: 11px;
+    color: var(--hf-muted);
+    vertical-align: -1px;
+  }
+}
+
+// Antwoordveld onder een reactie in de tijdlijnkaart
+.hf-comment .hf-comment-box {
+  margin-top: 8px;
+}

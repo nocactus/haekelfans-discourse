@@ -12,6 +12,8 @@ import HfComment from "./comment";
 import HfCommentBox from "./comment-box";
 import HfGallery from "./gallery";
 
+const eq = (a, b) => a === b;
+
 export default class HfPostCard extends Component {
   @tracked expanded = false;
   @tracked fullCooked = null;
@@ -19,6 +21,7 @@ export default class HfPostCard extends Component {
   @tracked likeCount = this.args.topic.hf_likers?.count ?? 0;
   @tracked extraReplies = [];
   @tracked replyTotal = this.args.topic.hf_reply_total ?? 0;
+  @tracked answeringPostNumber = null;
 
   get topic() {
     return this.args.topic;
@@ -138,6 +141,7 @@ export default class HfPostCard extends Component {
         post_id: post.id,
         post_number: post.post_number,
         reply_to_post_number: post.reply_to_post_number,
+        reply_to_name: post.reply_to_user?.name || post.reply_to_user?.username,
         username: post.username,
         name: post.name,
         avatar_template: post.avatar_template,
@@ -148,6 +152,13 @@ export default class HfPostCard extends Component {
       },
     ];
     this.replyTotal += 1;
+    this.answeringPostNumber = null;
+  }
+
+  @action
+  toggleAnswer(reply) {
+    this.answeringPostNumber =
+      this.answeringPostNumber === reply.post_number ? null : reply.post_number;
   }
 
   @action
@@ -239,7 +250,15 @@ export default class HfPostCard extends Component {
       {{#if this.replies.length}}
         <div class="hf-post-card__comments">
           {{#each this.replies as |reply|}}
-            <HfComment @reply={{reply}} />
+            <HfComment @reply={{reply}} @onAnswer={{this.toggleAnswer}}>
+              {{#if (eq this.answeringPostNumber reply.post_number)}}
+                <HfCommentBox
+                  @topicId={{@topic.id}}
+                  @replyToPostNumber={{reply.post_number}}
+                  @onPosted={{this.onPosted}}
+                />
+              {{/if}}
+            </HfComment>
           {{/each}}
           {{#if this.showViewAll}}
             <button type="button" class="hf-view-all" {{on "click" this.openModal}}>
