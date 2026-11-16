@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 # name: haekelfans-timeline
 # about: Tijdlijn-data voor het Häkelfans theme (afbeeldingen, replies, online, no-onebox)
-# version: 1.1.0
+# version: 1.1.1
 # authors: Timo Roosendaal
 # required_version: 2.7.0
 

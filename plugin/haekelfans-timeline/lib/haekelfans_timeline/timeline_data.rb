@@ -123,7 +123,10 @@ module HaekelfansTimeline
             "uploads.url",
             "uploads.width",
             "uploads.height",
+            "uploads.sha1",
           )
+      excluded = embedded_upload_sha1s(post_ids)
+      refs = refs.reject { |r| excluded[r[0]]&.include?(r[5]) }
       thumbs =
         OptimizedImage
           .where(upload_id: refs.map { |r| r[1] })
@@ -136,7 +139,7 @@ module HaekelfansTimeline
         .transform_values do |rows|
           rows
             .first(limit)
-            .map do |(_pid, upload_id, url, w, h)|
+            .map do |(_pid, upload_id, url, w, h, _sha1)|
               thumb = thumbs[upload_id]&.first
               {
                 url: UrlHelper.cook_url(url),
@@ -145,6 +148,40 @@ module HaekelfansTimeline
                 height: h,
               }
             end
+        end
+    end
+
+    # Afbeeldingen uit link-previews (site-icoon, thumbnail) en citaten horen
+    # niet in de fotogalerij: per post de sha1's van uploads binnen die blokken.
+    EMBED_SELECTOR = "aside.onebox, aside.quote, .onebox-wrapper"
+
+    def self.embedded_upload_sha1s(post_ids)
+      Post
+        .where(id: post_ids)
+        .where("cooked LIKE '%onebox%' OR cooked LIKE '%quote%'")
+        .pluck(:id, :cooked)
+        .to_h do |id, cooked|
+          sha1s = Set.new
+          Nokogiri::HTML5
+            .fragment(cooked.to_s)
+            .css(EMBED_SELECTOR)
+            .each do |block|
+              block
+                .css("img")
+                .each do |img|
+                  if (b62 = img["data-base62-sha1"]).present?
+                    sha1s << Upload.sha1_from_base62_encoded(b62)
+                  end
+                  [img["src"], img["data-orig-src"], img["srcset"]].compact.each do |src|
+                    if src.start_with?("upload://")
+                      sha1s << Upload.sha1_from_short_url(src)
+                    else
+                      src.scan(/\h{40}/) { |m| sha1s << m }
+                    end
+                  end
+                end
+            end
+          [id, sha1s.compact]
         end
     end
 
