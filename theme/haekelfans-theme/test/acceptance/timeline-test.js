@@ -232,7 +232,6 @@ acceptance("Häkelfans | timeline", function (needs) {
       ".hf-composer__raw",
       "Schau mal dieses tolle Garn aus dem Urlaub mit"
     );
-    await click(".hf-composer__toggle input");
     await click(".hf-composer__publish");
     assert.strictEqual(
       captured?.get("title"),
@@ -242,7 +241,7 @@ acceptance("Häkelfans | timeline", function (needs) {
     assert.strictEqual(
       captured?.get("hf_no_onebox"),
       "true",
-      "no-onebox vlag meegestuurd bij uitgezette preview"
+      "link-preview staat standaard uit"
     );
     assert.dom(".hf-composer__collapsed").exists("composer klapt weer dicht");
   });
