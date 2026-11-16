@@ -1212,3 +1212,9 @@ html.hf-no-link-preview #reply-control {
     }
   }
 }
+
+// ⋯-menu rechtsboven op de tijdlijnkaart.
+.hf-post-card__menu {
+  flex: none;
+  margin-left: 4px;
+}

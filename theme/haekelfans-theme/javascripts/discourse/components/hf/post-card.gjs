@@ -11,6 +11,7 @@ import { toggleLike } from "../../lib/hf-like";
 import HfComment from "./comment";
 import HfCommentBox from "./comment-box";
 import HfGallery from "./gallery";
+import HfPostMenu from "./post-menu";
 
 const eq = (a, b) => a === b;
 
@@ -184,6 +185,17 @@ export default class HfPostCard extends Component {
           <a class="hf-post-card__cat" href="/c/{{this.category.slug}}/{{this.category.id}}">
             {{this.category.name}}
           </a>
+        {{/if}}
+        {{#if @topic.hf_first_post_id}}
+          <div class="hf-post-card__menu">
+            <HfPostMenu
+              @postId={{@topic.hf_first_post_id}}
+              @postNumber={{1}}
+              @topicId={{@topic.id}}
+              @username={{this.poster.username}}
+              @onDeleted={{@onDeleted}}
+            />
+          </div>
         {{/if}}
       </header>
 

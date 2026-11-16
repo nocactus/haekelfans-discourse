@@ -14,6 +14,7 @@ import HfPostModal from "./post-modal";
 import HfProfileCard from "./profile-card";
 
 export default class HfTimeline extends Component {
+  @service appEvents;
   @service router;
   @service site;
 
@@ -50,9 +51,15 @@ export default class HfTimeline extends Component {
   }
 
   // De eigen filterbalk vervangt de core-navigatie (anders staan er twee).
+  // Na bewerken via de composer de kaarten verversen.
   markActive = modifier(() => {
+    const refresh = () => this.router.refresh();
     document.body.classList.add("hf-timeline-active");
-    return () => document.body.classList.remove("hf-timeline-active");
+    this.appEvents.on("composer:edited-post", refresh);
+    return () => {
+      document.body.classList.remove("hf-timeline-active");
+      this.appEvents.off("composer:edited-post", refresh);
+    };
   });
 
   get categoriesLabel() {
@@ -195,7 +202,11 @@ export default class HfTimeline extends Component {
 
         <div class="hf-timeline__list">
           {{#each this.topics as |topic|}}
-            <HfPostCard @topic={{topic}} @onOpen={{this.openModal}} />
+            <HfPostCard
+              @topic={{topic}}
+              @onOpen={{this.openModal}}
+              @onDeleted={{this.topicDeleted}}
+            />
           {{/each}}
         </div>
         <div class="hf-timeline__sentinel" {{this.observeSentinel}}></div>
