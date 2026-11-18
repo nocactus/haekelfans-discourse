@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
+import SharedDraftControls from "discourse/components/shared-draft-controls";
 import icon from "discourse/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import HfPostView from "../../components/hf/post-view";
@@ -16,6 +17,12 @@ export default class HfTopicView extends Component {
 
   get isRegularTopic() {
     return this.model?.archetype === "regular";
+  }
+
+  // De geneste weergave van Discourse toont de balk met "Thema veröffentlichen" niet;
+  // de platte weergave wel (dan hier niet, anders staat hij er twee keer).
+  get showSharedDraftControls() {
+    return !!(this.model?.is_shared_draft && this.model?.is_nested_view);
   }
 
   get creator() {
@@ -56,6 +63,9 @@ export default class HfTopicView extends Component {
   <template>
     {{#if this.isRegularTopic}}
       <div class="hf-topic-view">
+        {{#if this.showSharedDraftControls}}
+          <SharedDraftControls @topic={{this.model}} />
+        {{/if}}
         <a class="hf-topic-view__back" href="/latest?order=created">
           {{icon "arrow-left"}} {{this.backLabel}}
         </a>

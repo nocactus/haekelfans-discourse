@@ -3,6 +3,7 @@ import { click, fillIn, triggerKeyEvent, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import topicFixtures from "discourse/tests/fixtures/discovery-fixtures";
+import topicViewFixtures from "discourse/tests/fixtures/topic";
 
 export function hfTopicListResponse() {
   const list = structuredClone(topicFixtures["/latest.json"]);
@@ -297,6 +298,25 @@ acceptance("Häkelfans | timeline", function (needs) {
       .exists({ count: 5 }, "bewerken, link, bladwijzer, melden, verwijderen");
   });
 
+  test("verwijderen van de eerste post verwijdert het topic", async function (assert) {
+    // Discourse staat het verwijderen van de eerste post nooit toe (403); dat gaat via het topic.
+    const verzoeken = [];
+    pretenderServer.delete("/t/:id", (request) => {
+      verzoeken.push(request.url);
+      return pretenderHelper.response({});
+    });
+    pretenderServer.delete("/posts/:id", (request) => {
+      verzoeken.push(request.url);
+      return pretenderHelper.response({});
+    });
+    const topicId = hfTopicListResponse().topic_list.topics[0].id;
+    await visit("/latest");
+    await click(".hf-post-card:nth-of-type(1) .hf-post-card__menu .hf-post-menu__toggle");
+    await click(".hf-post-card:nth-of-type(1) .hf-post-card__menu .hf-post-menu__list .is-danger");
+    await click(".dialog-footer .btn-primary");
+    assert.deepEqual(verzoeken, [`/t/${topicId}`], "DELETE op het topic, niet op de post");
+  });
+
   test("berichtmodal toont direct alle reacties, ook geneste", async function (assert) {
     await visit("/latest");
     await click(".hf-post-card:nth-of-type(1) .hf-view-all");
@@ -352,5 +372,63 @@ acceptance("Häkelfans | categorie-tijdlijn", function (needs) {
     assert
       .dom(".hf-post-card__title")
       .doesNotIncludeText("About the bug category", "over-topic verborgen");
+  });
+});
+
+// Gedeeld concept (bijvoorbeeld van de Social Bot) op de topicpagina.
+function hfSharedDraftTopic({ nested }) {
+  const t = structuredClone(topicViewFixtures["/t/280/1.json"]);
+  t.is_shared_draft = true;
+  t.destination_category_id = 2;
+  t.is_nested_view = nested;
+  return t;
+}
+
+acceptance("Häkelfans | gedeeld concept, geneste weergave", function (needs) {
+  needs.user({ admin: true, staff: true });
+  needs.site({ shared_drafts_category_id: 9 });
+  needs.pretender((server, helper) => {
+    server.get("/t/280.json", () => helper.response(hfSharedDraftTopic({ nested: true })));
+    server.get("/t/280/1.json", () => helper.response(hfSharedDraftTopic({ nested: true })));
+    server.get("/n/:slug/:id.json", () => {
+      const t = hfSharedDraftTopic({ nested: true });
+      return helper.response({
+        topic: t,
+        op_post: t.post_stream.posts[0],
+        roots: [],
+        page: 0,
+        has_more_roots: false,
+      });
+    });
+    server.get("/haekelfans/topic/:id/tree.json", (request) =>
+      helper.response(hfTreeResponse(parseInt(request.params.id, 10)))
+    );
+  });
+
+  test("toont de publiceerknop", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+    assert.dom(".nested-view").exists("geneste weergave actief");
+    assert
+      .dom(".shared-draft-controls .publish-shared-draft")
+      .exists({ count: 1 }, "één publiceerknop");
+  });
+});
+
+acceptance("Häkelfans | gedeeld concept, platte weergave", function (needs) {
+  needs.user({ admin: true, staff: true });
+  needs.site({ shared_drafts_category_id: 9 });
+  needs.pretender((server, helper) => {
+    server.get("/t/280.json", () => helper.response(hfSharedDraftTopic({ nested: false })));
+    server.get("/t/280/1.json", () => helper.response(hfSharedDraftTopic({ nested: false })));
+    server.get("/haekelfans/topic/:id/tree.json", (request) =>
+      helper.response(hfTreeResponse(parseInt(request.params.id, 10)))
+    );
+  });
+
+  test("toont de publiceerknop van Discourse maar één keer", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+    assert
+      .dom(".shared-draft-controls .publish-shared-draft")
+      .exists({ count: 1 }, "geen dubbele balk naast die van Discourse");
   });
 });

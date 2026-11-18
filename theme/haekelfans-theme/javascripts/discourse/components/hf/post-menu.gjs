@@ -147,7 +147,12 @@ export default class HfPostMenu extends Component {
       message: this.label("delete_confirm"),
       didConfirm: async () => {
         try {
-          await ajax(`/posts/${this.args.postId}`, { type: "DELETE" });
+          // Discourse weigert het verwijderen van de eerste post (403); die gaat met het topic mee.
+          const url =
+            this.args.postNumber === 1
+              ? `/t/${this.args.topicId}`
+              : `/posts/${this.args.postId}`;
+          await ajax(url, { type: "DELETE" });
           this.args.onDeleted?.();
         } catch (e) {
           popupAjaxError(e);
