@@ -9,7 +9,7 @@ export function hfTopicListResponse() {
   const list = structuredClone(topicFixtures["/latest.json"]);
   const t = list.topic_list.topics[0];
   t.title = "Decke gehäkelt";
-  t.excerpt = "Meine neue Decke ist fertig";
+  t.excerpt = "Meine neue Decke ist fertig :ghost::wink:.";
   t.hf_first_post_id = 101;
   t.hf_images = [1, 2, 3, 4, 5, 6].map((n) => ({
     url: `/images/d${n}.jpg`,
@@ -158,6 +158,12 @@ acceptance("Häkelfans | timeline", function (needs) {
     assert
       .dom(`${card} .hf-comment__text`)
       .includesText("mega süß …", "HTML-entities in excerpt gedecodeerd");
+    assert
+      .dom(`${card} .hf-post-card__text img.emoji`)
+      .exists({ count: 2 }, "emoji-shortcodes in topic-excerpt als afbeelding");
+    assert
+      .dom(`${card} .hf-post-card__text`)
+      .doesNotIncludeText(":ghost:", "geen ruwe shortcode zichtbaar");
     assert.dom(`${card} .hf-comment-box textarea`).exists();
     assert.dom(`${card} .hf-view-all`).includesText("3");
     assert.dom(`${card} .hf-post-card__gallery img`).exists();
@@ -408,6 +414,11 @@ acceptance("Häkelfans | gedeeld concept, geneste weergave", function (needs) {
   test("toont de publiceerknop", async function (assert) {
     await visit("/t/internationalization-localization/280");
     assert.dom(".nested-view").exists("geneste weergave actief");
+    assert.dom(".hf-topic-view .hf-card").isVisible("eigen kaartweergave zichtbaar");
+    assert
+      .dom(".nested-view__op")
+      .isNotVisible("bericht van Discourse verborgen, niet dubbel");
+    assert.dom(".nested-view__header").isNotVisible("dubbele titel verborgen");
     assert
       .dom(".shared-draft-controls .publish-shared-draft")
       .exists({ count: 1 }, "één publiceerknop");

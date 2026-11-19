@@ -15,6 +15,13 @@ body.archetype-regular {
   #topic-progress-wrapper {
     display: none !important;
   }
+
+  // Geneste weergave van Discourse (o.a. bij links naar een losse reactie):
+  // alles behalve onze connector verbergen, anders staat het bericht er
+  // twee keer.
+  .nested-view > :not(.topic-above-post-stream-outlet) {
+    display: none !important;
+  }
 }
 
 .hf-topic-view {
