@@ -18,8 +18,9 @@ body.archetype-regular {
 
   // Geneste weergave van Discourse (o.a. bij links naar een losse reactie):
   // alles behalve onze connector verbergen, anders staat het bericht er
-  // twee keer.
-  .nested-view > :not(.topic-above-post-stream-outlet) {
+  // twee keer. Onze connector is een Glimmer-component en wordt zonder
+  // wrapper gerenderd: .hf-topic-view is zelf het directe kind.
+  .nested-view > :not(.hf-topic-view):not(.topic-above-post-stream-outlet) {
     display: none !important;
   }
 }
