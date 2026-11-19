@@ -51,7 +51,10 @@ export default class HfPostCard extends Component {
     if (this.expanded && this.fullCooked) {
       return htmlSafe(this.fullCooked);
     }
-    return this.topic.excerpt ? htmlSafe(this.topic.excerpt) : null;
+    // Discourse bewaart emoji in de topic-excerpt als ":ghost:"-tekst;
+    // escapedExcerpt (Topic-model) zet die om naar emoji-afbeeldingen.
+    const excerpt = this.topic.escapedExcerpt ?? this.topic.excerpt;
+    return excerpt ? htmlSafe(excerpt) : null;
   }
 
   get images() {
