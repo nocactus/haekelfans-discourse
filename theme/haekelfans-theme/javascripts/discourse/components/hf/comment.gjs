@@ -64,11 +64,19 @@ export default class HfComment extends Component {
   <template>
     <div class="hf-comment" data-hf-post-number={{@reply.post_number}}>
       <div class="hf-comment__avatar">
-        <img src={{this.avatarSrc}} alt="" loading="lazy" />
+        <a
+          href="/u/{{@reply.username}}"
+          data-user-card={{@reply.username}}
+          tabindex="-1"
+        ><img src={{this.avatarSrc}} alt="" loading="lazy" /></a>
       </div>
       <div class="hf-comment__body">
         <div class="hf-comment__bubble">
-          <span class="hf-comment__name">{{if @reply.name @reply.name @reply.username}}</span>
+          <a
+            class="hf-comment__name"
+            href="/u/{{@reply.username}}"
+            data-user-card={{@reply.username}}
+          >{{if @reply.name @reply.name @reply.username}}</a>
           {{#if this.replyToName}}
             <span class="hf-comment__replyto">{{icon "reply"}} {{this.replyToName}}</span>
           {{/if}}

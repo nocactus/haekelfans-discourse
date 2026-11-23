@@ -1131,6 +1131,37 @@ html.hf-modal-open {
   .fk-d-toasts {
     z-index: 9400;
   }
+
+  // Gebruikerskaart (klik op avatar/naam) boven de berichtmodal.
+  .user-card {
+    z-index: 9150;
+  }
+}
+
+// Avatar en naam van de schrijver openen de gebruikerskaart van Discourse
+// (data-user-card); Cmd/Ctrl-klik opent het profiel in een nieuw tabblad.
+.hf-post-card__avatar a,
+.hf-comment__avatar a,
+.hf-post-modal__head > a {
+  display: block;
+  line-height: 0;
+}
+
+.hf-post-card__name,
+.hf-comment__name,
+.hf-post-modal__name {
+  color: var(--hf-ink);
+  text-decoration: none;
+
+  &:hover,
+  &:focus-visible {
+    color: var(--hf-ink);
+    text-decoration: underline;
+  }
+}
+
+.hf-post-card__name {
+  align-self: flex-start;
 }
 
 // Foto's staan al in de galerij: niet nogmaals in de tekst tonen.

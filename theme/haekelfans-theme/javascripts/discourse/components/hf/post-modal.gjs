@@ -82,9 +82,17 @@ export default class HfPostModal extends Component {
     >
       <div class="hf-post-modal__dialog hf-card">
         <header class="hf-post-modal__head">
-          <img class="hf-post-modal__avatar" src={{this.posterAvatarSrc}} alt="" />
+          <a
+            href="/u/{{this.poster.username}}"
+            data-user-card={{this.poster.username}}
+            tabindex="-1"
+          ><img class="hf-post-modal__avatar" src={{this.posterAvatarSrc}} alt="" /></a>
           <div class="hf-post-modal__who">
-            <b>{{this.titleLabel}}</b>
+            <a
+              class="hf-post-modal__name"
+              href="/u/{{this.poster.username}}"
+              data-user-card={{this.poster.username}}
+            ><b>{{this.titleLabel}}</b></a>
             <span class="hf-post-modal__time">{{this.timeAgo}}</span>
           </div>
           <button

@@ -175,13 +175,21 @@ export default class HfPostCard extends Component {
       <header class="hf-post-card__head">
         <div class="hf-post-card__avatar">
           {{#if this.poster}}
-            <img src={{this.posterAvatarSrc}} alt="" loading="lazy" />
+            <a
+              href="/u/{{this.poster.username}}"
+              data-user-card={{this.poster.username}}
+              tabindex="-1"
+            ><img src={{this.posterAvatarSrc}} alt="" loading="lazy" /></a>
           {{/if}}
         </div>
         <div class="hf-post-card__who">
-          <span class="hf-post-card__name">
+          <a
+            class="hf-post-card__name"
+            href="/u/{{this.poster.username}}"
+            data-user-card={{this.poster.username}}
+          >
             {{#if this.poster.name}}{{this.poster.name}}{{else}}{{this.poster.username}}{{/if}}
-          </span>
+          </a>
           <span class="hf-post-card__time">{{this.timeAgo}}</span>
         </div>
         {{#if this.category}}
