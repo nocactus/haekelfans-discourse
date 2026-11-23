@@ -1132,10 +1132,13 @@ html.hf-modal-open {
     z-index: 9400;
   }
 
-  // Gebruikerskaart (klik op avatar/naam) boven de berichtmodal.
-  .user-card {
-    z-index: 9150;
-  }
+}
+
+// Gebruikerskaart (klik op avatar/naam) boven de berichtmodal. De kaart
+// staat in een float-kit-menu (z-index 701 op desktop); op mobiel geeft
+// Discourse dat menu zelf al 9999, dus alleen desktop ophogen.
+html.hf-modal-open.desktop-view .fk-d-menu[data-identifier="usercard"] {
+  z-index: 9150;
 }
 
 // Avatar en naam van de schrijver openen de gebruikerskaart van Discourse
