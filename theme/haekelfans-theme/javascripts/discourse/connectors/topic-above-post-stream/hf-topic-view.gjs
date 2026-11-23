@@ -72,12 +72,20 @@ export default class HfTopicView extends Component {
         <article class="hf-card">
           <header class="hf-post-card__head">
             <div class="hf-post-card__avatar">
-              <img src={{this.avatarSrc}} alt="" />
+              <a
+                href="/u/{{this.creator.username}}"
+                data-user-card={{this.creator.username}}
+                tabindex="-1"
+              ><img src={{this.avatarSrc}} alt="" /></a>
             </div>
             <div class="hf-post-card__who">
-              <span class="hf-post-card__name">
+              <a
+                class="hf-post-card__name"
+                href="/u/{{this.creator.username}}"
+                data-user-card={{this.creator.username}}
+              >
                 {{#if this.creator.name}}{{this.creator.name}}{{else}}{{this.creator.username}}{{/if}}
-              </span>
+              </a>
               <span class="hf-post-card__time">{{this.timeAgo}}</span>
             </div>
           </header>

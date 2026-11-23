@@ -1,5 +1,5 @@
 import { getOwner } from "@ember/owner";
-import { click, fillIn, triggerKeyEvent, visit } from "@ember/test-helpers";
+import { click, currentURL, fillIn, triggerKeyEvent, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import topicFixtures from "discourse/tests/fixtures/discovery-fixtures";
@@ -108,6 +108,16 @@ acceptance("Häkelfans | timeline", function (needs) {
           likes_received: 5,
           topic_count: 2,
           post_count: 0,
+        },
+      })
+    );
+    server.get("/u/:username/card.json", (request) =>
+      helper.response({
+        user: {
+          id: 42,
+          username: request.params.username,
+          name: "Marga de Boer",
+          avatar_template: "/letter_avatar_proxy/v4/letter/m/aaaaaa/{size}.png",
         },
       })
     );
@@ -294,6 +304,32 @@ acceptance("Häkelfans | timeline", function (needs) {
     assert
       .dom(".hf-post-card:nth-of-type(1) .hf-post-card__text")
       .hasClass("has-gallery", "foto's staan al in de galerij");
+  });
+
+  test("avatar en naam linken naar het profiel van de schrijver", async function (assert) {
+    await visit("/latest");
+    const card = ".hf-post-card:nth-of-type(1)";
+    const poster = document
+      .querySelector(`${card} .hf-post-card__name`)
+      ?.getAttribute("data-user-card");
+    assert.ok(poster, "naam van de schrijver heeft data-user-card");
+    assert.dom(`${card} .hf-post-card__name`).hasAttribute("href", `/u/${poster}`);
+    assert
+      .dom(`${card} .hf-post-card__avatar a`)
+      .hasAttribute("data-user-card", poster, "avatar opent dezelfde kaart");
+    assert
+      .dom(`${card} .hf-comment__name`)
+      .hasAttribute("href", "/u/marga", "naam onder een reactie linkt ook");
+    assert.dom(`${card} .hf-comment__avatar a`).hasAttribute("data-user-card", "marga");
+  });
+
+  test("klik op naam onder een reactie opent de gebruikerskaart", async function (assert) {
+    await visit("/latest");
+    await click(".hf-post-card:nth-of-type(1) .hf-comment__name");
+    assert
+      .dom(".user-card")
+      .includesText("Marga de Boer", "gebruikerskaart van Discourse geopend");
+    assert.strictEqual(currentURL(), "/latest", "tijdlijn blijft staan");
   });
 
   test("tijdlijnkaart heeft zelf een optiemenu", async function (assert) {
