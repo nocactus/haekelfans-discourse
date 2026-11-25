@@ -553,6 +553,21 @@
     gap: 10px;
   }
 
+  // Discourse core geeft input[type="text"] en textarea een vaste breedte
+  // (specificiteit 0,1,1), waardoor titel en tekst als smal blokje links
+  // bleven staan. Met twee classes winnen we die en vullen ze de kaart.
+  &__form &__title,
+  &__form &__raw {
+    box-sizing: border-box;
+    width: 100%;
+    max-width: none;
+    margin: 0;
+  }
+
+  &__form &__raw {
+    min-height: 8em;
+  }
+
   &__title {
     border: none;
     border-bottom: 1px solid var(--hf-line);
