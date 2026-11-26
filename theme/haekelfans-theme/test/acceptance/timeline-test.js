@@ -42,6 +42,15 @@ export function hfTopicListResponse() {
   return list;
 }
 
+export function hfLikersResponse() {
+  const users = [
+    { id: 901, username: "karin", name: "Karin" },
+    { id: 902, username: "brenda", name: "" },
+    { id: 903, username: "marga", name: "Marga de Boer" },
+  ];
+  return { post_action_users: users };
+}
+
 export function hfTreeResponse(topicId) {
   return {
     topic_id: topicId,
@@ -89,6 +98,7 @@ acceptance("Häkelfans | timeline", function (needs) {
     pretenderServer = server;
     pretenderHelper = helper;
     server.get("/latest.json", () => helper.response(hfTopicListResponse()));
+    server.get("/post_action_users.json", () => helper.response(hfLikersResponse()));
     server.get("/haekelfans/topic/:id/tree.json", (request) =>
       helper.response(hfTreeResponse(parseInt(request.params.id, 10)))
     );
@@ -211,6 +221,19 @@ acceptance("Häkelfans | timeline", function (needs) {
     assert
       .dom(".hf-topic-view__back")
       .exists("terugknop naar de tijdlijn aanwezig");
+    assert
+      .dom(".hf-topic-view .hf-social__likers")
+      .includesText("Karin, brenda und 1 anderen", "likers via post_action_users");
+    assert
+      .dom(".hf-topic-view .hf-social__count")
+      .exists("aantal reacties naast de likers");
+    assert
+      .dom(".hf-topic-view .hf-actions__like")
+      .exists("knop Gefällt mir op de topic-pagina");
+    await click(".hf-topic-view .hf-actions__reply");
+    assert
+      .dom(".hf-topic-view .hf-post-view > .hf-comment-box textarea")
+      .isFocused("Reaktion zet de cursor in het reactieveld");
   });
 
   test("header toont instelbare nav-links", async function (assert) {
@@ -364,6 +387,9 @@ acceptance("Häkelfans | timeline", function (needs) {
     await click(".hf-post-card:nth-of-type(1) .hf-view-all");
     assert.dom(".hf-post-modal").exists("modal opent");
     assert
+      .dom(".hf-post-modal .hf-actions__like")
+      .exists("knop Gefällt mir ook in de modal");
+    assert
       .dom(".hf-post-modal .hf-comment")
       .exists({ count: 2 }, "niveau 1 en 2 direct zichtbaar");
     assert
@@ -442,6 +468,7 @@ acceptance("Häkelfans | gedeeld concept, geneste weergave", function (needs) {
         has_more_roots: false,
       });
     });
+    server.get("/post_action_users.json", () => helper.response(hfLikersResponse()));
     server.get("/haekelfans/topic/:id/tree.json", (request) =>
       helper.response(hfTreeResponse(parseInt(request.params.id, 10)))
     );
@@ -467,6 +494,7 @@ acceptance("Häkelfans | gedeeld concept, platte weergave", function (needs) {
   needs.pretender((server, helper) => {
     server.get("/t/280.json", () => helper.response(hfSharedDraftTopic({ nested: false })));
     server.get("/t/280/1.json", () => helper.response(hfSharedDraftTopic({ nested: false })));
+    server.get("/post_action_users.json", () => helper.response(hfLikersResponse()));
     server.get("/haekelfans/topic/:id/tree.json", (request) =>
       helper.response(hfTreeResponse(parseInt(request.params.id, 10)))
     );
