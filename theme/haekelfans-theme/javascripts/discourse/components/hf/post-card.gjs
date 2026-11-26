@@ -3,23 +3,20 @@ import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { htmlSafe } from "@ember/template";
-import icon from "discourse/helpers/d-icon";
 import { ajax } from "discourse/lib/ajax";
 import { i18n } from "discourse-i18n";
 import { hfAvatarUrl, hfTimeAgo } from "../../lib/hf-format";
-import { toggleLike } from "../../lib/hf-like";
 import HfComment from "./comment";
 import HfCommentBox from "./comment-box";
 import HfGallery from "./gallery";
 import HfPostMenu from "./post-menu";
+import HfSocialActions from "./social-actions";
 
 const eq = (a, b) => a === b;
 
 export default class HfPostCard extends Component {
   @tracked expanded = false;
   @tracked fullCooked = null;
-  @tracked liked = this.args.topic.hf_likers?.current_user_liked ?? false;
-  @tracked likeCount = this.args.topic.hf_likers?.count ?? 0;
   @tracked extraReplies = [];
   @tracked replyTotal = this.args.topic.hf_reply_total ?? 0;
   @tracked answeringPostNumber = null;
@@ -68,26 +65,9 @@ export default class HfPostCard extends Component {
       .filter(Boolean);
   }
 
-  get likeIcon() {
-    return this.liked ? "heart" : "far-heart";
-  }
-
   get replies() {
     const base = this.topic.hf_replies ?? [];
     return [...base, ...this.extraReplies];
-  }
-
-  get likersLabel() {
-    const likers = this.topic.hf_likers;
-    if (!likers || likers.count === 0) {
-      return null;
-    }
-    const names = (likers.names ?? []).join(", ");
-    const rest = this.likeCount - (likers.names?.length ?? 0);
-    if (rest > 0) {
-      return i18n(themePrefix("hf.likers_summary"), { names, count: rest });
-    }
-    return i18n(themePrefix("hf.likers_names_only"), { names });
   }
 
   get showViewAll() {
@@ -96,18 +76,6 @@ export default class HfPostCard extends Component {
 
   get weiterlesenLabel() {
     return i18n(themePrefix("hf.weiterlesen"));
-  }
-
-  get likeLabel() {
-    return i18n(themePrefix("hf.like"));
-  }
-
-  get replyLabel() {
-    return i18n(themePrefix("hf.reply"));
-  }
-
-  get reactionCountLabel() {
-    return i18n(themePrefix("hf.reaction_count"), { count: this.replyTotal });
   }
 
   get viewAllLabel() {
@@ -120,20 +88,6 @@ export default class HfPostCard extends Component {
     if (!this.fullCooked) {
       const data = await ajax(`/t/${this.topic.id}.json`);
       this.fullCooked = data?.post_stream?.posts?.[0]?.cooked ?? null;
-    }
-  }
-
-  @action
-  async toggleTopicLike() {
-    const wasLiked = this.liked;
-    this.liked = !wasLiked;
-    this.likeCount += wasLiked ? -1 : 1;
-    try {
-      await toggleLike(this.topic.hf_first_post_id, wasLiked);
-    } catch (e) {
-      this.liked = wasLiked;
-      this.likeCount += wasLiked ? 1 : -1;
-      throw e;
     }
   }
 
@@ -247,32 +201,12 @@ export default class HfPostCard extends Component {
         </div>
       {{/if}}
 
-      <div class="hf-social">
-        <span class="hf-social__likers">
-          {{#if this.likersLabel}}
-            <span class="hf-social__heart">{{icon "heart"}}</span>
-            {{this.likersLabel}}
-          {{/if}}
-        </span>
-        <span class="hf-social__count">
-          {{#if this.replyTotal}}
-            {{this.reactionCountLabel}}
-          {{/if}}
-        </span>
-      </div>
-
-      <div class="hf-actions">
-        <button
-          type="button"
-          class="hf-actions__like {{if this.liked 'is-liked'}}"
-          {{on "click" this.toggleTopicLike}}
-        >{{icon this.likeIcon}} {{this.likeLabel}}</button>
-        <button
-          type="button"
-          class="hf-actions__reply"
-          {{on "click" this.openModal}}
-        >{{icon "far-comment"}} {{this.replyLabel}}</button>
-      </div>
+      <HfSocialActions
+        @postId={{@topic.hf_first_post_id}}
+        @likers={{@topic.hf_likers}}
+        @replyTotal={{this.replyTotal}}
+        @onReply={{this.openModal}}
+      />
 
       {{#if this.replies.length}}
         <div class="hf-post-card__comments">

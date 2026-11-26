@@ -9,20 +9,27 @@ import { i18n } from "discourse-i18n";
 import HfCommentBox from "./comment-box";
 import HfGallery from "./gallery";
 import HfPostMenu from "./post-menu";
+import HfSocialActions from "./social-actions";
 import HfTreeNode from "./tree-node";
 
 // Volledige weergave van één bericht + reply-boom. Gebruikt in de
 // berichtmodal en (Task 7) op de topic-pagina voor deeplinks.
-// @postData: { id, title, images, likers, reply_total, first_post_id, excerpt? }
+// @postData: { id, title, images, likers?, reply_total, first_post_id, excerpt? }
+// likers ontbreekt bij een deeplink; dan halen we ze zelf op (fetchLikers).
 export default class HfPostView extends Component {
   @tracked tree = null;
   @tracked cooked = null;
   @tracked extraRoots = [];
   @tracked page = 0;
+  // Modal: likers uit de topiclijst als beginwaarde; deeplink: pas na het laden.
+  @tracked likers = this.args.postData.likers ?? null;
+  @tracked loadedFirstPostId = null;
 
   @service appEvents;
+  @service currentUser;
 
-  load = modifier(() => {
+  load = modifier((element) => {
+    this.element = element;
     this.fetchAll();
     const refresh = () => this.fetchAll();
     this.appEvents.on("composer:edited-post", refresh);
@@ -45,6 +52,14 @@ export default class HfPostView extends Component {
     return i18n(themePrefix("hf.modal.load_more"));
   }
 
+  get firstPostId() {
+    return this.postData.first_post_id ?? this.loadedFirstPostId;
+  }
+
+  get replyTotal() {
+    return (this.postData.reply_total ?? 0) + this.extraRoots.length;
+  }
+
   get cookedHtml() {
     return this.cooked ? htmlSafe(this.cooked) : null;
   }
@@ -56,9 +71,39 @@ export default class HfPostView extends Component {
       ajax(`/t/${id}.json`).catch(() => null),
     ]);
     this.tree = tree;
-    this.cooked = topicJson?.post_stream?.posts?.[0]?.cooked ?? null;
+    const firstPost = topicJson?.post_stream?.posts?.[0];
+    this.cooked = firstPost?.cooked ?? null;
+    this.loadedFirstPostId = firstPost?.id ?? null;
     this.highlight();
+    await this.fetchLikers();
   }
+
+  // Zelfde vorm als hf_likers uit de plugin (topiclijst): eerste twee namen
+  // in volgorde van liken, totaal, en of de huidige gebruiker geliket heeft.
+  async fetchLikers() {
+    const postId = this.firstPostId;
+    if (!postId) {
+      return;
+    }
+    const data = await ajax("/post_action_users.json", {
+      data: { id: postId, post_action_type_id: 2 },
+    }).catch(() => null);
+    const users = data?.post_action_users;
+    if (!users) {
+      return;
+    }
+    this.likers = {
+      names: users.slice(0, 2).map((u) => u.name || u.username),
+      count: data.total_rows_post_action_users ?? users.length,
+      current_user_liked: users.some((u) => u.id === this.currentUser?.id),
+    };
+  }
+
+  focusCommentBox = () => {
+    this.element
+      ?.querySelector(":scope > .hf-comment-box textarea")
+      ?.focus();
+  };
 
   highlight() {
     const number = this.args.highlightPostNumber;
@@ -126,6 +171,15 @@ export default class HfPostView extends Component {
 
       {{#if this.postData.images.length}}
         <HfGallery @images={{this.postData.images}} @title={{this.postData.title}} />
+      {{/if}}
+
+      {{#if this.firstPostId}}
+        <HfSocialActions
+          @postId={{this.firstPostId}}
+          @likers={{this.likers}}
+          @replyTotal={{this.replyTotal}}
+          @onReply={{this.focusCommentBox}}
+        />
       {{/if}}
 
       <div class="hf-post-view__comments">
