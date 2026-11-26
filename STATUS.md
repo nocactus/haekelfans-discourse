@@ -2,7 +2,7 @@
 
 Status: actief
 Bijgewerkt: 2026-11-26
-Volgende stap: na het aanzetten van details_enabled [details] controleren in de kaartweergave; acceptance-tests v1.6.4 t/m v1.7.3 draaien (Docker)
+Volgende stap: bij het eerste echte bericht met [details] de tijdlijnkaart (excerpt) controleren; acceptance-tests v1.6.4 t/m v1.7.3 draaien (Docker)
 
 <!--
 Status-waarden: actief | geparkeerd | afgerond
@@ -11,17 +11,18 @@ De drie regels hierboven worden door dev-overzicht.sh uitgelezen. Houd het forma
 
 ## Waar staat het
 
-- Theme v1.7.3 staat live op club.haekelfans.de (deploy-repo nocactus/haekelfans-theme op `3d41e0b`, "Controleren op updates" gedaan).
+- Theme v1.7.4 staat live op club.haekelfans.de (deploy-repo nocactus/haekelfans-theme op `53e0397`, "Controleren op updates" gedaan).
 - Plugin ongewijzigd sinds 1.1.1.
 - Avatar en naam van de schrijver (tijdlijnkaart, topicweergave, berichtmodal, reacties) zijn links naar `/u/{gebruikersnaam}` met `data-user-card`: een klik opent de gebruikerskaart van Discourse, Cmd/Ctrl-klik het profiel in een nieuw tabblad.
 - Emoji in de tekst van tijdlijnkaarten worden als afbeelding getoond (core `escapedExcerpt`).
 - Titel en tekstveld van de composer (nieuw bericht op de tijdlijn) lopen over de volle breedte; het tekstveld is minimaal 8em hoog.
 - De regel met likers en de knoppen "Gefällt mir"/"Reaktion" (`HfSocialActions`) staan op de tijdlijnkaart, in de berichtmodal en op de topic-pagina. Bij een directe link haalt het theme de likers op via core `/post_action_users.json`.
+- Inklapbare blokken (`[details="Titel"] … [/details]`) werken: de core-plugin Details staat aan. Het theme geeft ze een eigen opmaak (kader, roze pijltje, vette titel) in berichttekst, kaarttekst, reacties en de composer-preview (`timeline.scss`).
 - Topics die via een directe link in de geneste weergave van Discourse openen, tonen alleen onze kaart; de rest van `.nested-view` is via CSS verborgen.
 
 ## Open beslissingen
 
-- Inklapbare blokken (`[details]`): de core-plugin Details stond uit (`details_enabled` = false). Timo zet hem zelf aan; daarna controleren hoe het blok eruitziet in onze kaartweergave, en oude berichten met `[details]` opnieuw laten opbouwen.
+- Oude berichten die `[details]` al bevatten (van vóór het aanzetten van Details) tonen nog de ruwe tekst tot ze opnieuw worden opgebouwd (rebake). Nog niet nagekeken of zulke berichten bestaan.
 
 ## Risico's en aandachtspunten
 
@@ -33,6 +34,7 @@ De drie regels hierboven worden door dev-overzicht.sh uitgelezen. Houd het forma
 ## Log
 
 <!-- Nieuwste bovenaan, één regel per sessie. -->
+- 2026-11-26: v1.7.4 (PR #27): Timo zette de core-plugin Details aan; het inklapbare blok kreeg Häkelfans-opmaak. Live; gecontroleerd in Chrome (desktop, ingevoegd blok in berichttekst en reactie, open en dicht). Nog niet gezien: een echt bericht met [details] op de tijdlijnkaart.
 - 2026-11-26: v1.7.3 (PR #25): de like-regel en de knoppen ontbraken bij een directe link (en in de modal); nu een gedeeld component. Live; gecontroleerd in Chrome (desktop: deeplink, modal, Reaktion-focus). Het smalle venster lukte niet (de breedte veranderde niet). [details] werkte niet omdat de core-plugin Details uitstaat; Timo zet die zelf aan.
 - 2026-11-25: v1.7.2 (PR #23): titel en tekstveld van de composer waren een smal blokje links (vaste breedte uit Discourse core); nu volle breedte. Live; gecontroleerd in Chrome (desktop en smal venster) en op een telefoon. Alleen CSS, geen acceptance-test.
 - 2026-11-23: v1.7.0 (PR #20): avatar en naam openen de gebruikerskaart. In de berichtmodal viel de kaart erachter; opgelost in v1.7.1 (PR #21). Beide live; gecontroleerd in Chrome (desktop en smal venster) en op een telefoon, geen problemen.
