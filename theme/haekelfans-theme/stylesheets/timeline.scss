@@ -1278,3 +1278,66 @@ html.hf-no-link-preview #reply-control {
   flex: none;
   margin-left: 4px;
 }
+
+// Inklapbaar blok ([details="Titel"] … [/details], core-plugin Details).
+// Kader in huisstijl met roze pijltje dat meedraait bij openklappen.
+// Geldt in berichttekst, reacties, tijdlijnkaart en de composer-preview.
+.hf-post-view__body,
+.hf-post-card__text,
+.hf-comment__text,
+.d-editor-preview {
+  details {
+    margin: 0.6em 0;
+    padding: 0 14px;
+    background: var(--hf-card);
+    border: 1px solid var(--hf-line);
+    border-radius: 12px;
+
+    &[open] {
+      padding-bottom: 4px;
+    }
+
+    > summary {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 0 -14px;
+      padding: 10px 14px;
+      font-weight: 700;
+      color: var(--hf-ink);
+      cursor: pointer;
+      list-style: none;
+      border-radius: 12px;
+
+      &::-webkit-details-marker {
+        display: none;
+      }
+
+      &::before {
+        content: "";
+        flex: none;
+        width: 7px;
+        height: 7px;
+        margin: 0 2px 0 1px;
+        border-right: 2px solid var(--hf-accent);
+        border-bottom: 2px solid var(--hf-accent);
+        transform: rotate(-45deg);
+        transition: transform 0.15s ease;
+      }
+
+      &:hover {
+        color: var(--hf-accent);
+      }
+    }
+
+    &[open] > summary {
+      margin-bottom: 0.5em;
+      border-bottom: 1px solid var(--hf-line);
+      border-radius: 12px 12px 0 0;
+
+      &::before {
+        transform: rotate(45deg);
+      }
+    }
+  }
+}
