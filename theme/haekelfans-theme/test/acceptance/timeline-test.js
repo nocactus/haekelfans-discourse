@@ -4,6 +4,7 @@ import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import topicFixtures from "discourse/tests/fixtures/discovery-fixtures";
 import topicViewFixtures from "discourse/tests/fixtures/topic";
+import { i18n } from "discourse-i18n";
 
 export function hfTopicListResponse() {
   const list = structuredClone(topicFixtures["/latest.json"]);
@@ -223,7 +224,11 @@ acceptance("Häkelfans | timeline", function (needs) {
       .exists("terugknop naar de tijdlijn aanwezig");
     assert
       .dom(".hf-topic-view .hf-social__likers")
-      .includesText("Karin, brenda und 1 anderen", "likers via post_action_users");
+      .includesText(
+        // Tekst uit het vertaalbestand: CI draait in het Engels, de site in het Duits.
+        i18n(themePrefix("hf.likers_summary"), { names: "Karin, brenda", count: 1 }),
+        "likers via post_action_users"
+      );
     assert
       .dom(".hf-topic-view .hf-social__count")
       .exists("aantal reacties naast de likers");
@@ -352,7 +357,8 @@ acceptance("Häkelfans | timeline", function (needs) {
     assert
       .dom(".user-card")
       .includesText("Marga de Boer", "gebruikerskaart van Discourse geopend");
-    assert.strictEqual(currentURL(), "/latest", "tijdlijn blijft staan");
+    // /latest stuurt het theme altijd door naar de chronologische tijdlijn.
+    assert.strictEqual(currentURL(), "/latest?order=created", "tijdlijn blijft staan");
   });
 
   test("tijdlijnkaart heeft zelf een optiemenu", async function (assert) {
