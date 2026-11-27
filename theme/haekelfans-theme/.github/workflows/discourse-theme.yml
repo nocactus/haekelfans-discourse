@@ -1,0 +1,17 @@
+# Draait de QUnit-tests van het theme (test/) tegen de nieuwste Discourse,
+# met de standaard-CI van Discourse (Postgres, Redis en browser in een container).
+# Dit bestand komt via `git subtree push` in de deploy-repo nocactus/haekelfans-theme
+# en draait daar bij elke deploy. Handmatig starten kan via "Run workflow".
+name: Discourse Theme
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  ci:
+    uses: discourse/.github/.github/workflows/discourse-theme.yml@v1
+    with:
+      # Geen package.json/Gemfile in dit theme; de lint-job zou daarop vastlopen.
+      skip_linting: true
