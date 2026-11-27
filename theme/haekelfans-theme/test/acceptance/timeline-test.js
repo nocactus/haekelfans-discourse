@@ -484,10 +484,20 @@ acceptance("Häkelfans | gedeeld concept, geneste weergave", function (needs) {
     await visit("/t/internationalization-localization/280");
     assert.dom(".nested-view").exists("geneste weergave actief");
     assert.dom(".hf-topic-view .hf-card").isVisible("eigen kaartweergave zichtbaar");
+    // De theme-CSS wordt in de testomgeving niet geladen (alleen het
+    // kleurenschema), dus "onzichtbaar" valt hier niet te testen. Wel de
+    // structuur waar de verberg-regel in topic.scss van afhangt:
+    // body.archetype-regular .nested-view > :not(.hf-topic-view)…
+    assert.dom(document.body).hasClass("archetype-regular", "body-class voor topic.scss");
     assert
-      .dom(".nested-view__op")
-      .isNotVisible("bericht van Discourse verborgen, niet dubbel");
-    assert.dom(".nested-view__header").isNotVisible("dubbele titel verborgen");
+      .dom(".nested-view > .hf-topic-view")
+      .exists("eigen kaart is direct kind van .nested-view, dus blijft zichtbaar");
+    assert
+      .dom(".nested-view > .nested-view__op")
+      .exists("bericht van Discourse is direct kind, dus verborgen door topic.scss");
+    assert
+      .dom(".nested-view > .nested-view__header")
+      .exists("titel van Discourse is direct kind, dus verborgen door topic.scss");
     assert
       .dom(".shared-draft-controls .publish-shared-draft")
       .exists({ count: 1 }, "één publiceerknop");
